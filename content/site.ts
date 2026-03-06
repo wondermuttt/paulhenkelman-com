@@ -23,7 +23,7 @@ export const siteConfig = {
     x: "https://x.com/paul_henkelman",
     medium: "https://medium.com/@paulhenkelman",
   },
-  socialLabelOrder: ["linkedin", "github", "x", "medium"] as const,
+  socialLabelOrder: ["linkedin", "x", "github", "medium"] as const,
 };
 
 export type SocialKey = (typeof siteConfig.socialLabelOrder)[number];
