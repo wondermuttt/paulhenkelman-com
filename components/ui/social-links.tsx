@@ -7,6 +7,8 @@ type SocialLinksProps = {
   direction?: "row" | "column";
   include?: readonly SocialKey[];
   showLabel?: boolean;
+  iconButtonClassName?: string;
+  iconClassName?: string;
 };
 
 type SocialIconProps = {
@@ -86,9 +88,13 @@ export function SocialLinks({
   direction = "row",
   include,
   showLabel = true,
+  iconButtonClassName,
+  iconClassName,
 }: SocialLinksProps) {
   const keys = include ?? siteConfig.socialLabelOrder;
   const isIconOnly = !showLabel;
+  const defaultIconButtonClassName =
+    "inline-flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 transition-colors hover:border-neutral-500 hover:bg-neutral-50 hover:text-neutral-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-neutral-700";
 
   return (
     <ul
@@ -108,13 +114,16 @@ export function SocialLinks({
               rel="noreferrer noopener"
               className={
                 isIconOnly
-                  ? "inline-flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 transition-colors hover:border-neutral-500 hover:bg-neutral-50 hover:text-neutral-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-neutral-700"
+                  ? `${defaultIconButtonClassName} ${iconButtonClassName ?? ""}`.trim()
                   : "inline-flex items-center gap-2 text-sm text-neutral-700 underline decoration-neutral-400 underline-offset-4 transition-colors hover:text-neutral-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-neutral-700"
               }
               aria-label={`Open ${label} profile`}
               title={label}
             >
-              <SocialIcon social={key} className={isIconOnly ? "h-5 w-5" : "h-4 w-4"} />
+              <SocialIcon
+                social={key}
+                className={isIconOnly ? iconClassName ?? "h-5 w-5" : "h-4 w-4"}
+              />
               {showLabel ? <span>{label}</span> : <span className="sr-only">{label}</span>}
             </Link>
           </li>
