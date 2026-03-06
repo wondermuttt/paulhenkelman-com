@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { CardGrid } from "@/components/ui/card-grid";
@@ -16,42 +17,55 @@ export default async function HomePage() {
     <>
       <section className="border-b border-black/10 bg-[#f6f4ef] py-20 sm:py-28">
         <div className="mx-auto w-full max-w-6xl px-6">
-          <div className="max-w-4xl">
-            <p className="mb-4 text-xs font-semibold tracking-[0.14em] text-neutral-500 uppercase">
-              {homeContent.hero.headerLine}
-            </p>
-            <div className="mb-4">
-              <p className="text-sm font-semibold text-neutral-900">{homeContent.hero.identityName}</p>
-              <p className="text-xs tracking-[0.12em] text-neutral-500 uppercase">
-                {homeContent.hero.identityRole}
+          <div className="grid items-end gap-12 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-10">
+            <div className="max-w-4xl">
+              <p className="mb-4 text-xs font-semibold tracking-[0.14em] text-neutral-500 uppercase">
+                {homeContent.hero.headerLine}
               </p>
-            </div>
-            <h1 className="text-4xl leading-tight font-semibold text-neutral-950 sm:text-6xl sm:leading-[1.08]">
-              {homeContent.hero.headline}
-            </h1>
-            <p className="mt-6 max-w-3xl text-lg leading-relaxed text-neutral-700 sm:text-xl">
-              {homeContent.hero.supporting}
-            </p>
-            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-neutral-600 sm:text-base">
-              {homeContent.hero.credibilitySignal}
-            </p>
+              <div className="mb-4">
+                <p className="text-sm font-semibold text-neutral-900">{homeContent.hero.identityName}</p>
+                <p className="text-xs tracking-[0.12em] text-neutral-500 uppercase">
+                  {homeContent.hero.identityRole}
+                </p>
+              </div>
+              <h1 className="text-4xl leading-tight font-semibold text-neutral-950 sm:text-6xl sm:leading-[1.08]">
+                {homeContent.hero.headline}
+              </h1>
+              <p className="mt-6 max-w-3xl text-lg leading-relaxed text-neutral-700 sm:text-xl">
+                {homeContent.hero.supporting}
+              </p>
+              <p className="mt-4 max-w-3xl text-sm leading-relaxed text-neutral-600 sm:text-base">
+                {homeContent.hero.credibilitySignal}
+              </p>
 
-            <div className="mt-10 flex flex-wrap items-center gap-3">
-              {homeContent.hero.primaryCtas.map((cta) => (
+              <div className="mt-10 flex flex-wrap items-center gap-3">
+                {homeContent.hero.primaryCtas.map((cta) => (
+                  <Link
+                    key={cta.href}
+                    href={cta.href}
+                    className="rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-medium text-neutral-50 transition-colors hover:bg-neutral-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-neutral-700"
+                  >
+                    {cta.label}
+                  </Link>
+                ))}
                 <Link
-                  key={cta.href}
-                  href={cta.href}
-                  className="rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-medium text-neutral-50 transition-colors hover:bg-neutral-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-neutral-700"
+                  href={homeContent.hero.secondaryCta.href}
+                  className="rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:border-neutral-500 hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-neutral-700"
                 >
-                  {cta.label}
+                  {homeContent.hero.secondaryCta.label}
                 </Link>
-              ))}
-              <Link
-                href={homeContent.hero.secondaryCta.href}
-                className="rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:border-neutral-500 hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-neutral-700"
-              >
-                {homeContent.hero.secondaryCta.label}
-              </Link>
+              </div>
+            </div>
+
+            <div className="mx-auto w-full max-w-xs lg:mx-0 lg:justify-self-end">
+              <Image
+                src="/images/paul-headshot-transparent-cropped.png"
+                alt="Headshot of Paul Henkelman"
+                width={1036}
+                height={920}
+                priority
+                className="h-auto w-full object-contain"
+              />
             </div>
           </div>
         </div>
