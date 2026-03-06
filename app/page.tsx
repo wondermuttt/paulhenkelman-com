@@ -1,65 +1,121 @@
-import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+import { CardGrid } from "@/components/ui/card-grid";
+import { CtaSection } from "@/components/ui/cta-section";
+import { Section } from "@/components/ui/section";
+import { SystemsDomainCard } from "@/components/ui/systems-domain-card";
+import { WritingCard } from "@/components/ui/writing-card";
+import { homeContent } from "@/content/home";
+import { systemsDomains } from "@/content/systems";
+import { getWritingEntries } from "@/lib/writing";
+
+export default async function HomePage() {
+  const writingEntries = await getWritingEntries();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <section className="border-b border-black/10 bg-[#f6f4ef] py-20 sm:py-28">
+        <div className="mx-auto w-full max-w-6xl px-6">
+          <div className="max-w-4xl">
+            <p className="mb-4 text-xs font-semibold tracking-[0.14em] text-neutral-500 uppercase">
+              AI Architecture · Distributed Systems · Production Scale
+            </p>
+            <h1 className="text-4xl leading-tight font-semibold text-neutral-950 sm:text-6xl sm:leading-[1.08]">
+              {homeContent.hero.headline}
+            </h1>
+            <p className="mt-6 max-w-3xl text-lg leading-relaxed text-neutral-700 sm:text-xl">
+              {homeContent.hero.supporting}
+            </p>
+
+            <div className="mt-10 flex flex-wrap items-center gap-3">
+              {homeContent.hero.primaryCtas.map((cta) => (
+                <Link
+                  key={cta.href}
+                  href={cta.href}
+                  className="rounded-full bg-neutral-900 px-5 py-2.5 text-sm font-medium text-neutral-50 transition-colors hover:bg-neutral-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-neutral-700"
+                >
+                  {cta.label}
+                </Link>
+              ))}
+              <Link
+                href={homeContent.hero.secondaryCta.href}
+                className="rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:border-neutral-500 hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-neutral-700"
+              >
+                {homeContent.hero.secondaryCta.label}
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </section>
+
+      <Section
+        id="pillars"
+        eyebrow="Core Focus"
+        title="Architectural Priorities"
+        intro="Domain depth, operational discipline, and systems-level design principles for AI capability that must perform under production conditions."
+      >
+        <CardGrid columns={2}>
+          {homeContent.pillars.map((pillar) => (
+            <article
+              key={pillar.title}
+              className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm shadow-black/5"
+            >
+              <h3 className="text-xl font-semibold text-neutral-950">{pillar.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-neutral-700">{pillar.description}</p>
+            </article>
+          ))}
+        </CardGrid>
+      </Section>
+
+      <Section
+        id="domains"
+        eyebrow="Systems"
+        title="Architectural Domains"
+        intro="Representative territory across AI architecture, distributed infrastructure, and operational intelligence systems."
+        className="border-t border-black/10 bg-[#faf9f6]"
+      >
+        <CardGrid>
+          {systemsDomains.map((domain) => (
+            <SystemsDomainCard key={domain.slug} domain={domain} />
+          ))}
+        </CardGrid>
+      </Section>
+
+      <Section
+        id="writing"
+        eyebrow="Writing"
+        title="Notes in Progress"
+        intro={homeContent.writingIntro}
+        className="border-t border-black/10"
+      >
+        <CardGrid>
+          {writingEntries.slice(0, 3).map((entry) => (
+            <WritingCard key={entry.slug} entry={entry} />
+          ))}
+        </CardGrid>
+      </Section>
+
+      <Section
+        id="about-preview"
+        eyebrow="About"
+        title="A Systems-Oriented Perspective"
+        intro={homeContent.aboutPreview}
+        className="border-t border-black/10 bg-[#faf9f6]"
+      >
+        <Link
+          href="/about"
+          className="inline-flex items-center rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:border-neutral-500 hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-neutral-700"
+        >
+          Read About
+        </Link>
+      </Section>
+
+      <CtaSection
+        title="Connect"
+        description={homeContent.connect}
+        primary={{ label: "Contact", href: "/contact" }}
+        secondary={{ label: "Explore Writing", href: "/writing" }}
+      />
+    </>
   );
 }

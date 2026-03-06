@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PaulHenkelman.com
 
-## Getting Started
+Production-ready personal authority platform for **Paul Henkelman** — focused on AI architecture, distributed systems, and production-scale operational systems.
 
-First, run the development server:
+## Purpose
+
+This site is designed as a long-horizon professional platform:
+
+- serious, restrained, executive-adjacent tone
+- architecture-first positioning (not a résumé dump)
+- structured for accumulating writing, systems perspective, and public technical credibility over time
+
+## Stack
+
+- **Next.js 16** (App Router)
+- **TypeScript**
+- **Tailwind CSS v4**
+- **MDX-ready writing pipeline** (local content files + compiled MDX)
+- Static-first architecture suitable for deployment on **Vercel**
+
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open: <http://localhost:3000>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build and verification
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run build
+npm run start
+```
 
-## Learn More
+## Content architecture
 
-To learn more about Next.js, take a look at the following resources:
+Main editable content lives in:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `content/site.ts` → global site config, social links, nav, email placeholder
+- `content/home.ts` → homepage copy
+- `content/about.ts` → about page narrative and sections
+- `content/systems.ts` → systems domain map
+- `content/writing.ts` → writing page intro/status copy
+- `content/writing/*.mdx` → individual writing entries
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Adding future MDX writing
 
-## Deploy on Vercel
+1. Create a new file in `content/writing/` named `your-slug.mdx`
+2. Include frontmatter:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```md
+---
+title: "Your Title"
+description: "One sentence summary"
+publishedAt: "2026-03-06"
+status: "Essay" # or "Forthcoming note"
+---
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. Add body content in Markdown/MDX.
+4. Entry will automatically appear on `/writing` and generate at `/writing/your-slug`.
+
+## SEO and metadata
+
+- Global metadata defaults: `lib/metadata.ts`
+- Per-page metadata: each route file exports metadata
+- `app/robots.ts` and `app/sitemap.ts` included
+- JSON-LD structured data (Person + WebSite) included in `app/layout.tsx`
+
+### Placeholder assets to replace
+
+- Social preview image: `public/og/paulhenkelman-og.svg`
+- Favicons:
+  - `public/favicon-16x16.png`
+  - `public/favicon-32x32.png`
+  - `public/apple-touch-icon.png`
+  - `app/favicon.ico`
+
+## Deployment to Vercel
+
+### 1) Connect GitHub repository
+
+- Push this repo to GitHub
+- In Vercel: **Add New → Project → Import Git Repository**
+- Select this repository
+
+### 2) Project settings
+
+- Framework preset: **Next.js** (auto-detected)
+- Root directory: repository root
+- Production branch: `main`
+- Environment variables: none required for v1
+
+### 3) Domain setup for `paulhenkelman.com`
+
+In Vercel Project → **Settings → Domains**:
+
+- Add `paulhenkelman.com` (apex/root)
+- Add `www.paulhenkelman.com`
+- Set redirect so only one canonical domain is primary (recommended: apex as primary, `www` redirect to apex)
+
+Update DNS records as shown by Vercel (typically A/ALIAS for apex + CNAME for `www`).
+
+## Notes
+
+- The site is intentionally minimal and maintainable: no CMS, no DB, no unnecessary runtime dependencies.
+- The content model is designed for easy iteration by editing typed content files and MDX entries.
