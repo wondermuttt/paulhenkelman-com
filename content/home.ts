@@ -2,12 +2,12 @@ export const homeContent = {
   hero: {
     headerLine: "AI Architecture · Distributed Systems · Operational AI",
     identityName: "Paul Henkelman",
-    identityRole: "AI Systems, Platforms, and Distributed Infrastructure",
+    identityRole: "",
     headline: "Where AI Architecture Meets Operational Reality",
     supporting:
-      "Paul Henkelman designs AI systems that operate under real production conditions. His work focuses on turning machine learning capability into reliable platforms that can be governed, observed, and trusted at scale.",
+      "Paul Henkelman designs AI systems that operate under real production conditions. His work focuses on turning machine learning models into reliable platforms that can be governed, observed, and trusted at scale.",
     credibilitySignal:
-      "Architecture leadership for AI platforms, distributed infrastructure, and operational intelligence systems.",
+      "Architecture leadership across AI platforms, distributed infrastructure, and operational intelligence systems.",
     primaryCtas: [
       { label: "Explore Systems", href: "/systems" },
       { label: "Read Writing", href: "/writing" },

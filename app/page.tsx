@@ -24,9 +24,11 @@ export default async function HomePage() {
               </p>
               <div className="mb-4">
                 <p className="text-sm font-semibold text-neutral-900">{homeContent.hero.identityName}</p>
-                <p className="text-xs tracking-[0.12em] text-neutral-500 uppercase">
-                  {homeContent.hero.identityRole}
-                </p>
+                {homeContent.hero.identityRole ? (
+                  <p className="text-xs tracking-[0.12em] text-neutral-500 uppercase">
+                    {homeContent.hero.identityRole}
+                  </p>
+                ) : null}
               </div>
               <h1 className="text-4xl leading-tight font-semibold text-neutral-950 sm:text-6xl sm:leading-[1.08]">
                 {homeContent.hero.headline}
