@@ -57,7 +57,7 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="mx-auto w-full max-w-xs lg:mx-0 lg:justify-self-end">
+            <div className="mx-auto w-full max-w-xs lg:-mt-10 lg:mx-0 lg:justify-self-end">
               <Image
                 src="/images/paul-headshot-transparent-cropped.png"
                 alt="Headshot of Paul Henkelman"
