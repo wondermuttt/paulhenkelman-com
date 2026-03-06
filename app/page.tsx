@@ -17,7 +17,7 @@ export default async function HomePage() {
     <>
       <section className="border-b border-black/10 bg-[#f6f4ef] py-20 sm:py-28">
         <div className="mx-auto w-full max-w-6xl px-6">
-          <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-10">
+          <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-center lg:gap-10">
             <div className="max-w-4xl">
               <p className="mb-4 text-xs font-semibold tracking-[0.14em] text-neutral-500 uppercase">
                 {homeContent.hero.headerLine}
@@ -57,7 +57,7 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="mx-auto w-full max-w-xs lg:-mt-10 lg:mx-0 lg:justify-self-end">
+            <div className="mx-auto w-full max-w-xs lg:mx-0 lg:justify-self-end">
               <Image
                 src="/images/paul-headshot-transparent-cropped.png"
                 alt="Headshot of Paul Henkelman"
