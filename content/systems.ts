@@ -36,7 +36,7 @@ export const systemsDomains: SystemsDomain[] = [
     summary:
       "Platform-level architecture for multi-step, tool-using agents with policy boundaries, execution controls, and operational observability.",
     importance:
-      "Agentic behavior without platform discipline is brittle. This domain is architecturally important because it converts autonomous capability into governed, auditable system behavior.",
+      "Agentic capability without platform discipline becomes brittle. This domain is architecturally important because it converts autonomous capability into governed, auditable system behavior.",
   },
   {
     slug: "recommendation-and-forecasting",

@@ -18,13 +18,22 @@ export default async function HomePage() {
         <div className="mx-auto w-full max-w-6xl px-6">
           <div className="max-w-4xl">
             <p className="mb-4 text-xs font-semibold tracking-[0.14em] text-neutral-500 uppercase">
-              AI Architecture · Distributed Systems · Production Scale
+              {homeContent.hero.headerLine}
             </p>
+            <div className="mb-4">
+              <p className="text-sm font-semibold text-neutral-900">{homeContent.hero.identityName}</p>
+              <p className="text-xs tracking-[0.12em] text-neutral-500 uppercase">
+                {homeContent.hero.identityRole}
+              </p>
+            </div>
             <h1 className="text-4xl leading-tight font-semibold text-neutral-950 sm:text-6xl sm:leading-[1.08]">
               {homeContent.hero.headline}
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-relaxed text-neutral-700 sm:text-xl">
               {homeContent.hero.supporting}
+            </p>
+            <p className="mt-4 max-w-3xl text-sm leading-relaxed text-neutral-600 sm:text-base">
+              {homeContent.hero.credibilitySignal}
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-3">
