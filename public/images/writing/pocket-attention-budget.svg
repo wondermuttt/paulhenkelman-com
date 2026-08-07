@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="330" viewBox="0 0 1320 330" font-family="Inter, Helvetica, Arial, sans-serif">
+  <rect width="1320" height="330" fill="#ffffff"/>
+
+  <text x="40" y="48" font-size="17" font-weight="600" fill="#171717">How &#8220;a&#8221; spends its 100-point attention budget</text>
+  <text x="40" y="74" font-size="14" fill="#737373">softmax shares of the scaled scores; the article puts 80% of its budget on the two words that matter</text>
+
+  <!-- rows: label x=40..150, bar starts x=170, max width 1000 for 50% -->
+  <!-- the: 10% -->
+  <text x="150" y="127" font-size="15" fill="#525252" text-anchor="end">the</text>
+  <rect x="170" y="112" width="200" height="22" rx="4" fill="#a3a3a3"/>
+  <text x="382" y="128" font-size="14" font-weight="600" fill="#525252">10%</text>
+
+  <!-- modem: 46% -->
+  <text x="150" y="177" font-size="15" fill="#171717" text-anchor="end">modem</text>
+  <rect x="170" y="162" width="920" height="22" rx="4" fill="#171717"/>
+  <text x="1102" y="178" font-size="14" font-weight="600" fill="#171717">46%</text>
+
+  <!-- needs: 34% -->
+  <text x="150" y="227" font-size="15" fill="#171717" text-anchor="end">needs</text>
+  <rect x="170" y="212" width="680" height="22" rx="4" fill="#171717"/>
+  <text x="862" y="228" font-size="14" font-weight="600" fill="#171717">34%</text>
+
+  <!-- a: 10% -->
+  <text x="150" y="277" font-size="15" fill="#525252" text-anchor="end">a</text>
+  <rect x="170" y="262" width="200" height="22" rx="4" fill="#a3a3a3"/>
+  <text x="382" y="278" font-size="14" font-weight="600" fill="#525252">10%</text>
+
+  <!-- baseline -->
+  <line x1="170" y1="98" x2="170" y2="296" stroke="#d4d4d4" stroke-width="1"/>
+</svg>

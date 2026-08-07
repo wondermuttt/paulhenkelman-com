@@ -2,7 +2,7 @@ export const aboutContent = {
   overview:
     "Paul Henkelman is an enterprise AI executive with 10+ years leading AI strategy, architecture, and delivery at Fortune 100 scale, and 30 years across systems, networking, security, and software. He designed and delivered Charter's first customer-facing agentic AI service, demonstrated to the CEO and adopted as the company-wide reference architecture, and leads AI platforms serving a 30M+ subscriber footprint.",
   architecturePerspective:
-    "The through-line of that career is a simple conviction: AI capability only matters when it becomes dependable infrastructure. Models are the easy part. Orchestration, observability, data discipline, security, and failure-aware design are what separate a demo from a system that runs at carrier scale, and thirty years of operating real infrastructure is what makes those requirements instinctive rather than aspirational.",
+    "Thirty years of running real infrastructure left one durable conviction: AI starts to matter when it becomes dependable infrastructure. Models are the easy part. The hard part is everything around them: orchestration, observability, data discipline, security, design that expects failure. Demos skip all of that, which is why so few of them survive contact with production.",
   career: [
     {
       period: "2025 – Present",
@@ -49,12 +49,12 @@ export const aboutContent = {
     {
       title: "Operations first",
       detail:
-        "Architecture is judged by runtime behavior, not demo quality. A system that cannot be observed, governed, and rolled back is not finished, whatever the prototype looked like.",
+        "Runtime behavior is the measure of an architecture. A system nobody can observe or roll back is unfinished, however good the prototype looked.",
     },
     {
       title: "Teach the mechanism",
       detail:
-        "Author and instructor of a full AI curriculum, from deep technical sessions for engineers to a compressed executive course on how LLMs actually work. Leaders who understand the machine make better decisions about it.",
+        "Author and instructor of a full AI curriculum: deep technical sessions for engineers, and a compressed executive course on how LLMs actually work. Leaders who understand the machine make better decisions about it.",
     },
     {
       title: "Prototype to production, personally",

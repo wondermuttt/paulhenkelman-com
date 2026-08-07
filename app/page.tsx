@@ -78,7 +78,7 @@ export default async function HomePage() {
         id="pillars"
         eyebrow="Core Focus"
         title="What I Work On"
-        intro="Four fronts of the same job: making AI capability dependable at enterprise scale."
+        intro="Most of the work lands in one of four areas."
       >
         <CardGrid columns={2}>
           {homeContent.pillars.map((pillar) => (
@@ -97,7 +97,7 @@ export default async function HomePage() {
         id="domains"
         eyebrow="Systems"
         title="Systems Built and Running"
-        intro="From agentic services in customers' hands to the platforms watching a national network."
+        intro="Agentic services in customers' hands, and the platforms watching a national network."
         className="border-t border-black/10 bg-[#faf9f6]"
       >
         <CardGrid>

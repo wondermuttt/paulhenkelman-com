@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="360" viewBox="0 0 1320 360" font-family="Inter, Helvetica, Arial, sans-serif">
+  <rect width="1320" height="360" fill="#ffffff"/>
+
+  <!-- Group headers -->
+  <text x="40" y="52" font-size="15" font-weight="600" fill="#737373" letter-spacing="1.5">READ THE INPUT</text>
+  <text x="40" y="162" font-size="15" font-weight="600" fill="#737373" letter-spacing="1.5">ATTENTION</text>
+  <text x="40" y="272" font-size="15" font-weight="600" fill="#737373" letter-spacing="1.5">THINK, ANSWER, REPEAT</text>
+
+  <!-- Row 1: steps 1-3 -->
+  <g>
+    <rect x="40" y="68" width="240" height="56" rx="10" fill="#fafafa" stroke="#d4d4d4"/>
+    <text x="56" y="92" font-size="14" font-weight="600" fill="#171717">1 · Tokenize</text>
+    <text x="56" y="112" font-size="13" fill="#525252">words become IDs</text>
+
+    <rect x="296" y="68" width="240" height="56" rx="10" fill="#fafafa" stroke="#d4d4d4"/>
+    <text x="312" y="92" font-size="14" font-weight="600" fill="#171717">2 · Embed</text>
+    <text x="312" y="112" font-size="13" fill="#525252">IDs become meaning vectors</text>
+
+    <rect x="552" y="68" width="240" height="56" rx="10" fill="#fafafa" stroke="#d4d4d4"/>
+    <text x="568" y="92" font-size="14" font-weight="600" fill="#171717">3 · Stamp position</text>
+    <text x="568" y="112" font-size="13" fill="#525252">so word order exists</text>
+  </g>
+
+  <!-- Row 2: steps 4-8 -->
+  <g>
+    <rect x="40" y="178" width="240" height="56" rx="10" fill="#fafafa" stroke="#d4d4d4"/>
+    <text x="56" y="202" font-size="14" font-weight="600" fill="#171717">4 · Build the question</text>
+    <text x="56" y="222" font-size="13" fill="#525252">query and keys</text>
+
+    <rect x="296" y="178" width="240" height="56" rx="10" fill="#fafafa" stroke="#d4d4d4"/>
+    <text x="312" y="202" font-size="14" font-weight="600" fill="#171717">5 · Score every token</text>
+    <text x="312" y="222" font-size="13" fill="#525252">dot products, then scale</text>
+
+    <rect x="552" y="178" width="240" height="56" rx="10" fill="#fafafa" stroke="#d4d4d4"/>
+    <text x="568" y="202" font-size="14" font-weight="600" fill="#171717">6 · Softmax</text>
+    <text x="568" y="222" font-size="13" fill="#525252">scores become percentages</text>
+
+    <rect x="808" y="178" width="240" height="56" rx="10" fill="#fafafa" stroke="#d4d4d4"/>
+    <text x="824" y="202" font-size="14" font-weight="600" fill="#171717">7 · Blend</text>
+    <text x="824" y="222" font-size="13" fill="#525252">mix what the winners offer</text>
+
+    <rect x="1064" y="178" width="216" height="56" rx="10" fill="#fafafa" stroke="#d4d4d4"/>
+    <text x="1080" y="202" font-size="14" font-weight="600" fill="#171717">8 · Add it back</text>
+    <text x="1080" y="222" font-size="13" fill="#525252">keep identity, gain context</text>
+  </g>
+
+  <!-- Row 3: steps 9-13 -->
+  <g>
+    <rect x="40" y="288" width="240" height="56" rx="10" fill="#fafafa" stroke="#d4d4d4"/>
+    <text x="56" y="312" font-size="14" font-weight="600" fill="#171717">9 · Detect</text>
+    <text x="56" y="332" font-size="13" fill="#525252">weigh evidence vs threshold</text>
+
+    <rect x="296" y="288" width="240" height="56" rx="10" fill="#fafafa" stroke="#d4d4d4"/>
+    <text x="312" y="312" font-size="14" font-weight="600" fill="#171717">10 · Write back</text>
+    <text x="312" y="332" font-size="13" fill="#525252">firing detectors speak</text>
+
+    <rect x="552" y="288" width="240" height="56" rx="10" fill="#fafafa" stroke="#d4d4d4"/>
+    <text x="568" y="312" font-size="14" font-weight="600" fill="#171717">11 · Score the vocabulary</text>
+    <text x="568" y="332" font-size="13" fill="#525252">one dot product per word</text>
+
+    <rect x="808" y="288" width="240" height="56" rx="10" fill="#fafafa" stroke="#d4d4d4"/>
+    <text x="824" y="312" font-size="14" font-weight="600" fill="#171717">12 · Softmax again</text>
+    <text x="824" y="332" font-size="13" fill="#525252">the answer, with confidence</text>
+
+    <rect x="1064" y="288" width="216" height="56" rx="10" fill="#171717"/>
+    <text x="1080" y="312" font-size="14" font-weight="600" fill="#fafafa">13 · Append, repeat</text>
+    <text x="1080" y="332" font-size="13" fill="#d4d4d4">until a stop token wins</text>
+  </g>
+</svg>

@@ -36,13 +36,13 @@ export const homeContent = {
     {
       title: "AI Strategy & Governance",
       description:
-        "Enterprise AI strategy, Data & AI governance on Charter's AI Center of Practice, and AI education at scale: author and instructor of a full internal curriculum, from engineering deep dives to the executive course.",
+        "Enterprise AI strategy, Data & AI governance on Charter's AI Center of Practice, and AI education at scale as author and instructor of Charter's internal AI curriculum for engineers and executives.",
     },
   ],
   writingIntro:
     "How these systems actually work, and which design choices stand up in production.",
   aboutPreview:
-    "Thirty years across systems, networking, security, and software, the last decade leading AI at Fortune 100 scale. The perspective is practical: architecture that performs reliably, scales responsibly, and stays inspectable under operational load.",
+    "Thirty years across systems, networking, security, and software, the last decade leading AI at Fortune 100 scale. What stuck is a habit of judging architecture by how it behaves under operational load.",
   speakingIntro:
     "Three invited talks in 2026: enterprise and agentic AI, AI & data governance, and world modeling.",
   connect:

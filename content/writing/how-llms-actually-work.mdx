@@ -1,13 +1,13 @@
 ---
 title: "How LLMs Actually Work, for People Who Decide Things"
-description: "The complete path from a sentence to an answer, with nothing mystical left standing. Based on the executive session of an engineering training series on LLMs: if you can multiply and add, you can follow every computation a real transformer performs."
+description: "A complete transformer, traced by hand: tokens, embeddings, attention, detectors, and the final prediction, every number on the table. If you can multiply and add, you can follow all of it."
 publishedAt: "2026-08-07"
 status: "Essay"
 ---
 
-C-suites get paid to decide where they need better information. For the most part their instincts serve them well. AI is the exception, because the vocabulary used to describe LLMs seems almost designed to stifle exploration: neural, attention, emergent, hallucination. Language like that makes the machine sound like a colleague. It is not a colleague. It is a pipeline of mathematical computations, and every stage of it can be opened up to see what is actually happening inside.
+C-suites get paid to decide where they need better information, and AI resists the instinct, because the vocabulary around it seems almost designed to stifle exploration: neural, attention, emergent, hallucination. Language like that makes the machine sound like a colleague. It is not a colleague. It is a pipeline of arithmetic, and the only honest way to prove that is to run the pipeline in front of you, which is what this essay does. To test, debug, cost, or capacity-plan a system, you first have to be able to explain it, and by the end you will be able to explain this one.
 
-Vendors make all sorts of promises about AI. To test, debug, cost, or capacity-plan such a system, you first have to be able to explain it. That is what this essay is for: an end-to-end walkthrough of how an LLM works that doubles as a primer for testing vendor claims. It is adapted from the executive session of an AI curriculum I wrote and teach; the math is simplified but never skipped.
+The vehicle is a pocket transformer taken from the executive session of an AI curriculum I wrote and teach: ten words of vocabulary, one layer, one attention head, 126 parameters in total. Every production model you have heard of runs the same equations, just wider and deeper. We will give it four words, "the modem needs a," and follow every computation until it answers and then decides, on its own, to stop talking. If you can multiply and add, you can check every step on paper.
 
 Two sentences summarize everything. First, AI is a mathematical pipeline: language goes in, becomes numbers, passes through layers of learned transformations, and a probability comes out. Second, meaning becomes geometry: words become points in space, similar meanings land close together, and "how similar are these two ideas?" becomes a question about the angle between two points, computable with multiply-and-add.
 
@@ -19,58 +19,179 @@ An LLM never actually reads your text. The first thing that happens to a prompt 
 
 A word about tokens, because these small groups of characters set the price of running AI. API rates, context windows, and generation speed are all quoted in tokens. In English, four characters is roughly one token, and 750 words lands near a thousand. The same content in another language can run two to three times the tokens, worth knowing before a multilingual customer-facing deployment. You pay for AI by the token, so a budget conversation is a token conversation.
 
-Next, each token is traded for its row number in the vocabulary, and that list of integers is what the model actually takes in. The point that matters: the integers are arbitrary labels. Nothing makes token 4438 "closer" to 1587 than to 11. "Dog" might sit at entry 7 while "puppy" sits at 98,431. Doing arithmetic on the labels produces nonsense; "dog" plus one is not a slightly better dog, it is whatever unrelated word occupies the next shelf.
-
-That single fact explains a familiar class of AI embarrassments. A model asked to count the r's in "strawberry" sometimes gets it wrong, and the reason is not stupidity. The model never saw letters; the word reached it as one or two opaque chunks. A surprising number of the strange failures making the rounds are tokenization stories.
+Next, each token is traded for its row number in the vocabulary, and that list of integers is what the model actually takes in. The point that matters: the integers are arbitrary labels. Nothing makes token 4438 "closer" to 1587 than to 11. "Dog" might sit at entry 7 while "puppy" sits at 98,431. Doing arithmetic on the labels produces nonsense; "dog" plus one is not a slightly better dog, it is whatever unrelated word occupies the next shelf. That single fact explains a familiar class of AI embarrassments, like a model miscounting the r's in "strawberry": it never saw letters, only one or two opaque chunks.
 
 ## Where meaning enters
 
-The next stage is the one that earns the pipeline its keep. Every token ID indexes into an enormous learned table, and what comes back is a vector: thousands of numbers that encode the token's meaning as a position in space.
+The next stage fixes the arbitrary-label problem. Every token ID indexes into an enormous learned table, and what comes back is a vector: thousands of numbers that encode the token's meaning as a position in space.
 
-The property worth pausing on: similar meanings produce similar vectors. In this space, "dog" and "puppy" point in nearly the same direction, while "dog" and "spreadsheet" point somewhere else entirely. No one programmed that in. It fell out of training the model to predict text. And once meaning has coordinates, the similarity of two meanings is just the angle between two vectors, which multiplication and addition can compute. The live session does one by hand, on a napkin; it takes two minutes, and the mystique never recovers.
+The property worth pausing on: similar meanings produce similar vectors. In this space, "dog" and "puppy" point in nearly the same direction, while "dog" and "spreadsheet" point somewhere else entirely. No one programmed that in. It fell out of training the model to predict text. And once meaning has coordinates, the similarity of two meanings is just the angle between two vectors, which multiplication and addition can compute, as you are about to do.
 
 A great deal of the industry stands on that one idea. Semantic search is a nearest-neighbor hunt through meaning-space. Retrieval-augmented generation, RAG, locates the document chunks whose vectors sit nearest your question and passes them to the model as context. A recommendation engine measures a user's vector against item vectors. Agent memory pulls up past situations whose vectors look like the present one. One geometric trick, five product names.
 
-## Attention is asking around
+## Meet the pocket transformer
 
-From here the vectors move through the transformer, the architecture underneath every model you have heard of. A transformer is not a single clever mechanism. It is one simple block repeated dozens of times, and the block does two things.
+Time to open the machine. Our model's world is ten words, and its entire stock of meaning is one small table. Each word gets four numbers. In a production model those axes are unlabeled and there are 4,096 of them; here I have nicknamed the four so the story can be read aloud: device, action, grammar, and end (as in end-of-sentence).
 
-The first is attention. Each token composes a question, roughly "what am I looking for?", while every token also posts a label: "here is what I contain." Every question is scored against every label at once, and those scores determine whose information gets mixed in. The classic test sentence: "The trophy didn't fit in the suitcase because it was too big." Everyone reads "it" as the trophy. Swap one word, "too small," and "it" becomes the suitcase. The sentence's shape never changed; context alone decided. Attention is the machinery that lets each word weigh that context, and the rule was never written by anyone. It emerged from patterns across billions of sentences.
+| token | device | action | grammar | end |
+|---|---|---|---|---|
+| the | 0 | 0 | 0.4 | 0 |
+| modem | 1 | 0 | 0 | 0 |
+| needs | 0 | 0.8 | 0 | 0 |
+| a | 0 | 0 | 1 | 0 |
+| reboot | 0.6 | 0.8 | 0 | 0 |
+| signal | 0.9 | 0 | 0.1 | 0 |
+| tech | 0.7 | 0.3 | 0 | 0 |
+| truck | 0.5 | 0.1 | 0 | 0 |
+| new | 0 | 0.2 | 0.6 | 0 |
+| . | 0 | 0 | 0 | 1 |
 
-The block's second half is a bank of detectors: small learned circuits that add up the evidence in a token's vector, subtract a threshold, and either fire or keep quiet. A production model carries thousands of them per layer. Run the block thirty-plus times in sequence and the representation sharpens the way an essay sharpens across drafts, until "bank" beside "river" has moved far away from "bank" beside "loan."
+Read a few rows and the table starts talking. "Modem" is pure device. "Needs" is pure action-required. "A" is pure grammar, an article waiting for its noun. The period is pure end-of-sentence. "Reboot" straddles two axes, a device-flavored action, and that detail will decide the ending.
 
-Underneath, everything reduces to matrix multiplication, which is multiply-and-add at industrial volume. That is the whole reason the GPU won AI. Picture a CPU as sixteen brilliant chefs, excellent at complicated one-off dishes, and a GPU as twenty thousand line cooks all chopping at once. AI work is nearly all chopping.
+In a real model every one of these numbers is learned from data; here they are hand-set so the mechanism stays visible, and the displayed values are rounded to two decimals, so if you recompute a step you may land within a penny of what I show. Beyond this table the model owns a small position stamp, three attention lenses, and two detectors with their write-back rows, each introduced when it comes on stage. That inventory is the whole machine. Here is the route the data takes through it:
+
+![The thirteen steps of the trace, grouped into reading the input, attention, and think-answer-repeat](/images/writing/pocket-13-steps.svg)
+
+## Reading the input
+
+Step one, tokenize. "the modem needs a" becomes the ID list [1, 2, 3, 4]. Step two, embed: each ID copies its row from the table above. No arithmetic yet, just lookups.
+
+Step three, stamp the position. Attention has no built-in sense of order; without a stamp, "modem needs a" and "a needs modem" would look identical. Our stamp is a small value added on the end axis that grows with the slot: 0 for slot one, 0.1 for slot two, 0.2 for slot three, 0.3 for slot four. One addition per token, and the sentence now knows its own order:
+
+| token (slot) | device | action | grammar | end |
+|---|---|---|---|---|
+| the (1) | 0 | 0 | 0.4 | 0 |
+| modem (2) | 1 | 0 | 0 | 0.10 |
+| needs (3) | 0 | 0.8 | 0 | 0.20 |
+| a (4) | 0 | 0 | 1 | 0.30 |
+
+From here we follow the last token, "a," because the last position is the one that predicts the next word. The word "a" is an article waiting for its noun, and attention is how it asks the rest of the sentence what is going on. Every other token runs the same math in parallel.
+
+## Attention, by hand
+
+First, why attention exists at all. Take the sentence "The trophy didn't fit in the suitcase because it was too big." Everyone reads "it" as the trophy. Swap one word, "too small," and "it" becomes the suitcase. The sentence's shape never changed; context alone decided. Attention is the machinery that lets each word weigh context like that, and here is the whole formula:
+
+Attention(Q, K, V) = softmax(QK&#7488; / &#8730;d) &#183; V
+
+It looks worse than it is. Q is a question, K is a set of labels, V is a set of offerings, and with our vector width of 4, the scary &#8730;d is the square root of four, which is 2. The next five steps are that formula, one piece at a time.
+
+Step four builds the question. A lens called W&#81; turns a token's vector into a query. A lens is just a small grid of weights, and ours has two live channels:
+
+| from axis | seeking device | seeking action |
+|---|---|---|
+| device | 0 | 0 |
+| action | 2.5 | 0 |
+| grammar | 3 | 3 |
+| end | 0 | 0 |
+
+Read down the first column: grammar contributes 3 to the "seeking device" channel. In plain English, grammar words go looking for devices, which is exactly what an article should do. Now push "a," whose stamped vector is [0, 0, 1, 0.30], through that column: 0&#215;0 + 0&#215;2.5 + 1&#215;3 + 0.30&#215;0 = 3.00. The second channel works out the same way. So q = [3.00, 3.00], and you can read it aloud: "a" walks in asking two questions, any devices here, and any actions needed?
+
+Every token also runs its vector through a second lens, W&#8342;, which builds its label, what it advertises to searchers. That lens simply copies the device axis into channel one and the action axis into channel two. The results:
+
+| token | advertises device | advertises action |
+|---|---|---|
+| the | 0 | 0 |
+| modem | 1.00 | 0 |
+| needs | 0 | 0.80 |
+| a | 0 | 0 |
+
+"Modem" advertises device-ness. "Needs" advertises an unmet action. "The" and "a" advertise nothing, because the lens deleted their grammar content and there was nothing underneath.
+
+Step five scores the question against every label, one dot product each. Against modem: 3&#215;1.00 + 3&#215;0 = 3.00. Against needs: 3&#215;0 + 3&#215;0.80 = 2.40. Against "the" and "a": zero. Then the one division in the whole machine: divide everything by &#8730;4 = 2, which keeps scores in a range the next step handles gracefully. The scaled row is 0, 1.50, 1.20, 0.
+
+Step six is softmax, the move that turns scores into percentages, and it is three rows of arithmetic. Exponentiate each score: e&#8304; = 1, e&#185;&#183;&#8309; = 4.48, e&#185;&#183;&#178; = 3.32, e&#8304; = 1. Add them up: 9.80. Divide each by the total: 10%, 46%, 34%, 10%. That is the entire mystery of softmax, and it never changes the order of the scores, it only converts gaps into proportions.
+
+![Bar chart of the attention budget: the 10 percent, modem 46 percent, needs 34 percent, a 10 percent](/images/writing/pocket-attention-budget.svg)
+
+Look at what the arithmetic just did. The article handed 80 percent of its attention to "modem" and "needs," the two words that matter, and nobody programmed that reading of the sentence. The lenses produced it.
+
+Step seven blends what the winners offer. A third lens, W&#8347;, decides what each token hands over if selected: modem offers its device signal, needs offers its action signal, the others offer nothing. Multiply each offering by its attention share and add. On the device axis: 0.46&#215;1.00 = 0.46. On the action axis: 0.34&#215;0.80 = 0.27. The gathered context is z = [0.46, 0.27, 0, 0], and it reads as: mostly a device, plus a need.
+
+Step eight adds it back. The residual move, position by position: [0, 0, 1, 0.30] + [0.46, 0.27, 0, 0] = [0.46, 0.27, 1.00, 0.30]. "A" keeps its own identity, grammar still 1.00, and gains context. That keep-and-add pattern is what lets real models stack 32 layers without early information washing out. Attention is finished: the article now knows its sentence.
+
+## Two detectors interrogate the token
+
+The feed-forward network sounds grand. It is a bank of detectors, and ours has two. Each one weighs the evidence in the token's vector, subtracts a threshold, and keeps the result only if positive (negatives become zero, a rule called ReLU). A production layer runs 14,336 of these; two are enough to watch the mechanism work.
+
+| evidence from | detector A | detector B |
+|---|---|---|
+| device | 0.4 | 1 |
+| action | 0.4 | 1 |
+| grammar | 1.2 | &#8722;2 |
+| end | 0 | 0 |
+| threshold | &#8722;0.9 | &#8722;1.4 |
+
+Detector A is asking: an article, in a context of devices and needs? Detector B is asking: device plus action with no article pending, in other words, is this sentence finished? Note B's grammar weight of minus two. An open article is evidence against being done.
+
+Run A on our token [0.46, 0.27, 1.00, 0.30]: 0.4&#215;0.46 + 0.4&#215;0.27 + 1.2&#215;1.00 = 1.49. Subtract the threshold: 1.49 &#8722; 0.90 = 0.59. Positive, so A fires at 0.59. Run B: 0.46 + 0.27 &#8722; 2&#215;1.00 = &#8722;1.27, minus 1.40 is &#8722;2.67. Negative, so B stays silent. The model knows the sentence is not done, and that knowledge is a negative number.
+
+Step ten lets the firing detector speak. Each detector owns a write-back row, its opinion about what the token should become:
+
+| write-back | device | action | grammar | end |
+|---|---|---|---|---|
+| detector A | 2.4 | 4.6 | &#8722;1.6 | &#8722;0.5 |
+| detector B | &#8722;1.2 | &#8722;2.4 | 0 | 3.6 |
+
+A fired at 0.59, so its message is 0.59 times its row: [1.42, 2.71, &#8722;0.94, &#8722;0.30]. B writes nothing. Add the message to the token and the result is h&#8242; = [1.88, 2.99, 0.05, 0.00]. Read the change: action-needed surged from 0.27 to 2.99, device rose, and the article-ness was almost entirely cancelled. The token stopped being an article and became a request for a fix.
+
+## The answer
+
+Step eleven scores every word in the vocabulary, and the elegant part is that no new weights are needed. The scorer is the embedding table from the beginning, reused backwards: how aligned is the finished token with each word's meaning? One dot product per word. For reboot: 0.6&#215;1.88 + 0.8&#215;2.99 = 3.52. The full shelf of raw scores, called logits:
+
+| word | logit |
+|---|---|
+| reboot | 3.52 |
+| needs | 2.39 |
+| tech | 2.21 |
+| modem | 1.88 |
+| signal | 1.69 |
+| truck | 1.24 |
+| four more | lower |
+
+Reboot leads because it matches both signals at once, the device context and the surging action-need. "Needs" matches only one and "modem" only the other. Step twelve is softmax again, this time across the vocabulary:
+
+![Bar chart of final probabilities: reboot 45 percent, needs 15, tech 12, modem 9, signal 7](/images/writing/pocket-probability-shelf.svg)
+
+Reboot, at 45 percent, triple the runner-up. The machine has completed "the modem needs a reboot," and you checked the arithmetic that did it.
+
+## The loop, and the stop
+
+Step thirteen: append "reboot" and run all thirteen steps again. This is how every model writes, one token per full pass, hundreds of passes per paragraph. I will give you pass two in summary, and every number is checkable the same way.
+
+"Reboot" is now the question-asker, an action word hunting its object, and attention comes back quieter: modem 36 percent, reboot itself 24. After the blend and residual its vector is [1.11, 1.10, 0.00, 0.40]: device and action both loud, article gone. Now watch the detectors trade places. A's evidence totals 0.88 against its threshold of 0.90. Two pennies short, so it stays silent; with no article on deck, there is nothing for a fix-word to complete. B's evidence is 1.11 + 1.10 with no grammar penalty, clearing its bar to fire at 0.80, and B's write-back row points almost entirely at the end axis: 0.80 &#215; 3.6 = 2.90 lands there. Score the vocabulary and the period wins at 77 percent.
+
+That ending is the part worth remembering. The model completed the thought and then decided, by arithmetic, that it was finished talking. A threshold is a decision, and you just watched one flip on a margin of 0.02.
+
+## The same math at real scale
+
+Substitute the production sizes and nothing else changes:
+
+| | pocket model | production (8B class) |
+|---|---|---|
+| vocabulary | 10 | ~128,000 |
+| width per token | 4 | 4,096 |
+| layers | 1 | 32 |
+| attention heads | 1 | 32 per layer |
+| detectors per layer | 2 | 14,336 |
+| parameters | 126 | ~8,000,000,000 |
+| arithmetic per token | ~300 operations | ~16 billion multiply-adds |
+
+Our trace was perhaps ten minutes of careful arithmetic. A human doing one production token at one operation per second would need about 500 years; a GPU does it in milliseconds, mostly as matrix multiplication, which is the same multiply-and-add you just performed, in bulk. That is also the whole reason the GPU won AI: a CPU is sixteen brilliant chefs, a GPU is twenty thousand line cooks all chopping at once, and this workload is nearly all chopping. I did simplify honestly along the way: real models run 32 attention heads side by side, normalize between steps, learn their weights from data instead of taking them from me, and cache old keys and values for speed. Every one of those is a size or bookkeeping difference, not a different algorithm.
 
 ## Prediction, not lookup
 
-Here is the fact to carry into every vendor meeting: an LLM is a fluency-maximizing plausibility engine. What it produces is not an answer fetched from anywhere. It is a score for every token in the vocabulary, roughly 100,000 candidates for what comes next. Give it "The capital of France is" and Paris scores around 96 percent, London around 2, and everything else splits the crumbs.
+Now the payoff for sitting through the arithmetic. What you watched the model produce was a score for every word it knows. An LLM is a fluency-maximizing plausibility engine. Its weights encode how text tends to continue, and that tendency is the entire mechanism behind an answer that feels retrieved. Ask a big model to finish "The capital of France is" and Paris scores about 96 percent for the same reason reboot scored 45 in our toy: everything it read points that way.
 
-No database of answers exists inside the model. It scores continuations and selects a likely one. Paris wins because, across everything the model read, that sentence continues that way almost every time. What the model knows is stored as tendencies in its weights, not as rows in a facts table.
-
-For anyone signing off on a deployment, the consequence is the whole ballgame: a continuation can be perfectly fluent, score at the top, and be flat wrong, and it will sound precisely as confident as a correct answer. The machine optimizes plausibility, not truth. Hallucination is not a defect some vendor will patch away next quarter; it is what a plausibility engine natively does. Grounding techniques like RAG exist for exactly this reason. They swap the question "what does the model remember?" for "what do these retrieved documents say?", and the second question is one you can audit.
-
-One last mechanical detail rounds out the picture. The model emits a single token, appends it, and runs the whole pipeline again. A paragraph of output means hundreds of complete passes through the machine, and the run ends when the model predicts a stop token. Which sets up my favorite demonstration.
-
-## The pocket transformer
-
-A claim like "it's all arithmetic" deserves to be challenged, so the curriculum's deepest session answers the challenge directly: it traces a complete, working transformer that has 126 parameters. Not a diagram of one. A real one, small enough that every number fits on a slide, with a ten-word vocabulary, one layer, and one attention head. Its equations, steps, and data flow match an 8-billion-parameter production model exactly; only the dimensions are shrunk.
-
-The session feeds it four words, "the modem needs a," and the room watches the completion happen. The article "a" forms its question and puts 80 percent of its attention budget on "modem" and "needs," precisely the two words that matter, and it lands there through arithmetic alone. A detector fires at 0.59 and writes its opinion back into the token, which stops being an article and turns into a request for a fix. The vocabulary gets scored, "reboot" takes 45 percent, and the machine has completed "the modem needs a reboot" without one hidden step.
-
-Then comes the moment people bring up later. Append "reboot" and run everything again. Now a different detector fires, one whose learned evidence amounts to: device present, action present, no article pending, the request is complete. It writes onto the end-of-sentence axis, and the period wins at 77 percent. By arithmetic, the model has decided it is finished talking. The first detector, meanwhile, came in at 0.88 against a threshold of 0.90, two pennies short, and stayed silent. A threshold is a decision, and the room just watched one flip.
-
-Only scale separates that toy from production. Four dimensions grow to 4,096, one attention head to 32, one layer to 32, two detectors to 14,336 per layer. Around 300 hand-traceable operations become roughly 16 billion multiply-adds per generated token. A human doing one operation per second would need about 500 years per token. A GPU finishes in milliseconds, and you now know precisely what it spent them on.
+For anyone signing off on a deployment, the consequence is the whole ballgame: a continuation can be perfectly fluent, score at the top, and be flat wrong, and it will sound precisely as confident as a correct answer. The machine optimizes plausibility. Truth was never part of the objective, so hallucination is native behavior, and no vendor patch is coming for it. Grounding techniques like RAG exist for exactly this reason. They swap the question "what does the model remember?" for "what do these retrieved documents say?", and the second question is one you can audit.
 
 ## What this buys you
-
-Not trivia. Leverage.
 
 Cost stops being magic. Tokens and GPU-hours are engineering units, the way kilowatt-hours are. Context windows, latency, and per-seat pricing all come back to how many times the pipeline runs and how wide it runs. A team that understands the pipeline can work out, from first principles, what to build, what to buy, and what either should cost.
 
 Vendor claims become testable. "Our model understands your business" unpacks to: the weights encode continuation tendencies, and the context window carries whatever gets fed in per request. The follow-ups then ask themselves: what gets retrieved, what gets logged, where does our data enter, and does it leave?
 
-Risk acquires a mechanism. Knowing the machine scores plausibility, you stop asking whether it hallucinates, since it does, and start asking engineering questions instead: grounded on which sources, evaluated how, monitored by whom, with human checkpoints wherever consequences are real. Governance gets sharply better the moment it concerns mechanisms instead of magic.
+Risk conversations get concrete, too. The question of whether the machine hallucinates is settled, it does, so the useful questions are engineering ones: grounded on which sources, evaluated how, monitored by whom, with human checkpoints wherever consequences are real. Governance improves the moment it has a mechanism to talk about.
 
-And the coming years of AI headlines will be assembled from parts you can now name. An agent is this same loop permitted to call tools rather than stop. A world model applies the identical recipe of tokens, embeddings, attention, and next-thing prediction to environments rather than text.
+And the coming years of AI headlines will be assembled from parts you can now name. An agent is this same loop, allowed to call tools along the way. A world model runs the same recipe of tokens, embeddings, attention, and next-thing prediction over environments: video, 3-D space, physics.
 
-A transformer is arithmetic you could do by hand, repeated until it looks like thought. A leader who has internalized that stops being an audience for AI claims and becomes a qualified judge of them, able to reason about capability and risk from first principles. That reasoning, and not any particular model, is the durable advantage.
+A transformer is arithmetic you could do by hand, and now have, repeated until it looks like thought. A leader who has internalized that stops being an audience for AI claims and becomes a qualified judge of them, able to reason about capability and risk from first principles. That reasoning outlasts every model it will ever be applied to, which is what makes it the durable advantage.

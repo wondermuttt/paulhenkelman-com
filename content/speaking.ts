@@ -11,7 +11,7 @@ export type SpeakingEngagement = {
 export const speakingContent = {
   pageTitle: "Speaking",
   intro:
-    "Invited talks on enterprise AI, AI and data governance, and world modeling, for audiences ranging from working engineers to CIO/CTO/EVP leadership.",
+    "Invited talks on enterprise AI, AI and data governance, and world modeling, delivered to engineering audiences and to CIO/CTO/EVP leadership.",
 };
 
 export const speakingEngagements: SpeakingEngagement[] = [
@@ -23,7 +23,7 @@ export const speakingEngagements: SpeakingEngagement[] = [
     topic: "AI & Data Governance",
     audience: "Technologists and technology leaders across CableLabs member operators",
     summary:
-      "How enterprises can govern AI and the data that feeds it without strangling delivery: governance structures, responsible-AI practice, and what changes when agentic systems enter production.",
+      "How an enterprise can govern AI and the data that feeds it without strangling delivery, and what changes once agentic systems reach production.",
   },
   {
     slug: "cablelabs-executive-strategy-retreat-2026",
@@ -33,7 +33,7 @@ export const speakingEngagements: SpeakingEngagement[] = [
     topic: "Agentic AI and Enterprise AI",
     audience: "CIO, CTO, and EVP leadership from across the industry",
     summary:
-      "Where agentic AI and enterprise AI platforms are actually headed, including AIOps: what it takes to move agentic capability from demonstration to dependable operations at carrier scale.",
+      "Where agentic AI and enterprise AI platforms are actually headed, AIOps included, and what it takes to run agentic capability as a dependable operation at carrier scale.",
   },
   {
     slug: "scte-rocky-mountain-symposium-2026",
@@ -43,6 +43,6 @@ export const speakingEngagements: SpeakingEngagement[] = [
     topic: "AI in Network Management & Control, and the World-Model Future",
     audience: "Broadband engineers and technical leadership, Rocky Mountain chapter",
     summary:
-      "AI-driven network management and control today, from AIOps detection through automated remediation, and where it goes next: world models that give operational agents human-like intuition about how the network actually behaves.",
+      "The current state of AI in network management and control, AIOps included, followed by a longer look at world models and why they may give operational agents a real intuition for network behavior.",
   },
 ];

@@ -45,7 +45,7 @@ export const systemsDomains: SystemsDomain[] = [
     summary:
       "An open-source agentic memory system providing embedding-based semantic search and GraphRAG, wrapped in MCP as first-class agent memory.",
     importance:
-      "Independently developed and in internal use at Charter. Agent memory is where most agentic architectures quietly fail; Noetix treats it as a first-class system rather than an afterthought.",
+      "Independently developed and in internal use at Charter. Agent memory is usually the weakest piece of an agentic architecture; Noetix gives it the same engineering weight as the agent itself.",
     link: {
       href: "https://github.com/paulhenkelman/noetix",
       label: "View on GitHub",
@@ -58,7 +58,7 @@ export const systemsDomains: SystemsDomain[] = [
     summary:
       "Agent-safe sensitive-data handling: security architecture for agentic systems that must work with credentials and PII under guardrail and human-in-the-loop patterns built for dynamic workflows.",
     importance:
-      "A patent disclosure has been filed; technical detail will follow when the application publishes. The underlying problem is general: agentic systems inherit every data-exposure risk of the tools they orchestrate, and the architecture has to solve that, not the prompt.",
+      "A patent disclosure has been filed; technical detail will follow when the application publishes. The underlying problem is general: agentic systems inherit every data-exposure risk of the tools they orchestrate, and closing that gap is an architecture problem.",
   },
   {
     slug: "network-world-models",

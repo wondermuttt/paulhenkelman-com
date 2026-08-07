@@ -19,7 +19,7 @@ export default function SystemsPage() {
       <PageIntro
         eyebrow="Systems"
         title="Systems Built and Running"
-        description="What's been built, what it does, and the scale it runs at."
+        description="What's been built, and the scale it runs at."
       />
 
       <Section>

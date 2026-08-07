@@ -18,7 +18,7 @@ export default function AboutPage() {
       <PageIntro
         eyebrow="About"
         title="Thirty Years of Systems, a Decade of AI at Scale"
-        description="From Navy technical operations to enterprise AI architecture: the background behind the systems."
+        description="The background behind the systems on this site."
       />
 
       <Section title="Overview">

@@ -3,6 +3,7 @@ import path from "node:path";
 
 import matter from "gray-matter";
 import { compileMDX } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 
 import { mdxComponents } from "@/components/mdx/mdx-components";
 import { writingContent } from "@/content/writing";
@@ -93,6 +94,11 @@ export async function getWritingBySlug(slug: string) {
   const { content: compiled } = await compileMDX({
     source: content,
     components: mdxComponents,
+    options: {
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+      },
+    },
   });
 
   return {
