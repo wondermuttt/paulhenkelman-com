@@ -6,17 +6,17 @@ import { Section } from "@/components/ui/section";
 import { WritingCard } from "@/components/ui/writing-card";
 import { writingContent } from "@/content/writing";
 import { buildMetadata } from "@/lib/metadata";
-import { getWritingEntries } from "@/lib/writing";
+import { getWritingListItems } from "@/lib/writing";
 
 export const metadata: Metadata = buildMetadata({
   title: "Writing",
   description:
-    "Essays and notes on production AI architecture, distributed systems, agentic platforms, model epistemology, and operational reliability.",
+    "Essays by Paul Henkelman on how AI systems actually work and what it takes to run them in production, adapted from the AI curriculum he writes and teaches.",
   path: "/writing",
 });
 
 export default async function WritingPage() {
-  const entries = await getWritingEntries();
+  const entries = await getWritingListItems();
 
   return (
     <>
@@ -26,10 +26,10 @@ export default async function WritingPage() {
         description={writingContent.intro}
       />
 
-      <Section intro={writingContent.statusNote}>
+      <Section>
         <CardGrid>
           {entries.map((entry) => (
-            <WritingCard key={entry.slug} entry={entry} />
+            <WritingCard key={entry.href} entry={entry} />
           ))}
         </CardGrid>
       </Section>

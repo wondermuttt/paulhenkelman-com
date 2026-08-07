@@ -5,6 +5,7 @@ import matter from "gray-matter";
 import { compileMDX } from "next-mdx-remote/rsc";
 
 import { mdxComponents } from "@/components/mdx/mdx-components";
+import { writingContent } from "@/content/writing";
 
 const WRITING_DIRECTORY = path.join(process.cwd(), "content/writing");
 
@@ -17,6 +18,13 @@ export type WritingFrontmatter = {
 
 export type WritingEntry = WritingFrontmatter & {
   slug: string;
+};
+
+export type WritingListItem = WritingFrontmatter & {
+  href: string;
+  external?: {
+    source: string;
+  };
 };
 
 function toSlug(filename: string) {
@@ -50,6 +58,31 @@ export async function getWritingEntries(): Promise<WritingEntry[]> {
   );
 
   return entries.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+}
+
+export async function getWritingListItems(): Promise<WritingListItem[]> {
+  const localEntries = await getWritingEntries();
+
+  const localItems: WritingListItem[] = localEntries.map((entry) => ({
+    title: entry.title,
+    description: entry.description,
+    publishedAt: entry.publishedAt,
+    status: entry.status,
+    href: `/writing/${entry.slug}`,
+  }));
+
+  const externalItems: WritingListItem[] = writingContent.externalEntries.map((entry) => ({
+    title: entry.title,
+    description: entry.description,
+    publishedAt: entry.publishedAt,
+    status: entry.status,
+    href: entry.href,
+    external: { source: entry.source },
+  }));
+
+  return [...localItems, ...externalItems].sort((a, b) =>
+    b.publishedAt.localeCompare(a.publishedAt),
+  );
 }
 
 export async function getWritingBySlug(slug: string) {

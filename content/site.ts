@@ -1,29 +1,28 @@
 export const siteConfig = {
   name: "Paul Henkelman",
   defaultTitle:
-    "Paul Henkelman | AI Architecture, Distributed Systems, and Production AI",
+    "Paul Henkelman | Enterprise AI Architecture, Agentic Systems, and Production AI",
   description:
-    "Personal authority platform for Paul Henkelman on AI architecture, distributed systems, and production-scale operational intelligence.",
+    "Paul Henkelman designs and delivers enterprise AI systems: agentic services in production, AIOps platforms at 30M+ subscriber scale, and the infrastructure and governance that make them dependable.",
   url: "https://paulhenkelman.com",
   locale: "en_US",
-  email: "contact@paulhenkelman.com",
-  xHandle: "@paul_henkelman",
+  email: "contact@henkelman.net",
   footerIdentity:
-    "Architecture leadership for production AI and distributed systems.",
+    "Enterprise AI architecture: agentic systems, AI platforms, and production-scale operations.",
   navigation: [
     { label: "Home", href: "/" },
     { label: "About", href: "/about" },
     { label: "Systems", href: "/systems" },
+    { label: "Speaking", href: "/speaking" },
     { label: "Writing", href: "/writing" },
     { label: "Contact", href: "/contact" },
   ],
   socialLinks: {
     linkedin: "https://linkedin.com/in/paulhenkelman",
     github: "https://github.com/paulhenkelman",
-    x: "https://x.com/paul_henkelman",
     medium: "https://medium.com/@paulhenkelman",
   },
-  socialLabelOrder: ["linkedin", "x", "github", "medium"] as const,
+  socialLabelOrder: ["linkedin", "github", "medium"] as const,
 };
 
 export type SocialKey = (typeof siteConfig.socialLabelOrder)[number];
@@ -31,6 +30,5 @@ export type SocialKey = (typeof siteConfig.socialLabelOrder)[number];
 export const socialLabels: Record<SocialKey, string> = {
   linkedin: "LinkedIn",
   github: "GitHub",
-  x: "X",
   medium: "Medium",
 };

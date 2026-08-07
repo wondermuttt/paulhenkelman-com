@@ -26,15 +26,20 @@ const personSchema = {
   url: siteConfig.url,
   description: siteConfig.description,
   sameAs: Object.values(siteConfig.socialLinks),
-  jobTitle: "AI Architect",
+  jobTitle: "Sr. Director, AI Strategy & Architecture",
+  worksFor: {
+    "@type": "Organization",
+    name: "Charter Communications",
+  },
   email: siteConfig.email,
   knowsAbout: [
-    "AI architecture",
-    "distributed systems",
-    "production AI",
+    "enterprise AI strategy",
     "agentic systems",
-    "operational reliability",
-    "model epistemology",
+    "AI architecture",
+    "AIOps",
+    "MLOps and LLMOps platforms",
+    "AI and data governance",
+    "distributed systems",
   ],
 };
 

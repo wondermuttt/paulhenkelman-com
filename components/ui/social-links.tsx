@@ -55,13 +55,6 @@ function SocialIcon({ social, className }: SocialIconProps) {
         </svg>
       );
 
-    case "x":
-      return (
-        <svg {...svgProps} fill="currentColor">
-          <path d="M18.244 2h3.308l-7.226 8.26L22.83 22h-6.658l-5.214-6.817L4.99 22H1.68l7.73-8.835L1.254 2h6.827l4.713 6.231L18.244 2Zm-1.167 18h1.833L7.08 3.897H5.114L17.077 20Z" />
-        </svg>
-      );
-
     case "medium":
       return (
         <svg

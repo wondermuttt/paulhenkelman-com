@@ -1,13 +1,13 @@
 export const homeContent = {
   hero: {
-    headerLine: "AI Architecture · Distributed Systems · Operational AI",
+    headerLine: "AI Strategy & Architecture · Agentic Systems · Production AI",
     identityName: "Paul Henkelman",
     identityRole: "",
     headline: "Where AI Architecture Meets Operational Reality",
     supporting:
-      "Paul Henkelman designs AI systems that operate under real production conditions. His work focuses on turning machine learning models into reliable platforms that can be governed, observed, and trusted at scale.",
+      "Paul Henkelman is an enterprise AI executive who designs and delivers AI systems that operate under real production conditions: agentic services in customers' hands, AIOps platforms watching a 30M+ subscriber network, and the training and inference infrastructure underneath them.",
     credibilitySignal:
-      "Architecture leadership across AI platforms, distributed infrastructure, and operational intelligence systems.",
+      "Sr. Director, AI Strategy & Architecture at Charter Communications. Invited speaker at CableLabs and SCTE. Author of Noetix, an open-source agentic memory system.",
     primaryCtas: [
       { label: "Explore Systems", href: "/systems" },
       { label: "Read Writing", href: "/writing" },
@@ -19,30 +19,32 @@ export const homeContent = {
   },
   pillars: [
     {
-      title: "Production AI Systems",
+      title: "Agentic Systems",
       description:
-        "Designing end-to-end systems where models, data, orchestration, and operations function as a single platform.",
+        "Architected Charter's first customer-facing agentic AI service, demonstrated to the CEO and adopted as the company-wide reference architecture; deep protocol-level MCP work, guardrail and human-in-the-loop patterns, and agent evaluation.",
     },
     {
-      title: "Distributed Infrastructure",
+      title: "AI Platforms & MLOps",
       description:
-        "Defining the reliability, compute, and network foundations required to run AI capability at organizational scale.",
+        "Idea-to-inference platform design (GPUaaS), distributed training and inference at scale, and 100+ LLM fine-tuning runs personally directed on EKS and SageMaker, through full pretraining and world-model training.",
     },
     {
-      title: "Agentic Platforms",
+      title: "AIOps & Applied ML",
       description:
-        "Building agentic capabilities as governed platforms with control planes, safeguards, and measurable behavior.",
+        "Detection, causal inference, prediction, and automated remediation for a 30M+ subscriber footprint; petabyte-scale telemetry ML built on a decade pioneering enterprise AIOps at Comcast.",
     },
     {
-      title: "Operational Intelligence",
+      title: "AI Strategy & Governance",
       description:
-        "Applying forecasting, optimization, and recommendation architecture to improve high-stakes operational decisions.",
+        "Enterprise AI strategy, Data & AI governance on Charter's AI Center of Practice, and AI education at scale: author and instructor of a full internal curriculum, from engineering deep dives to the executive course.",
     },
   ],
   writingIntro:
-    "Writing is where architectural judgment becomes explicit: what works, what breaks, and which design choices stand up under production pressure.",
+    "How these systems actually work, and which design choices stand up in production.",
   aboutPreview:
-    "Paul’s perspective is shaped by both distributed systems engineering and production AI execution. The focus is practical: architecture that performs reliably, scales responsibly, and remains interpretable under operational load.",
+    "Thirty years across systems, networking, security, and software, the last decade leading AI at Fortune 100 scale. The perspective is practical: architecture that performs reliably, scales responsibly, and stays inspectable under operational load.",
+  speakingIntro:
+    "Three invited talks in 2026: enterprise and agentic AI, AI & data governance, and world modeling.",
   connect:
-    "Paul is open to thoughtful conversations on AI architecture, distributed systems, and the operational realities of large-scale intelligent platforms.",
+    "For conversations on AI architecture, agentic systems, speaking, or the operational realities of large-scale AI platforms.",
 };

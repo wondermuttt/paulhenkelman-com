@@ -1,49 +1,72 @@
 export type SystemsDomain = {
   slug: string;
   title: string;
+  meta: string;
   summary: string;
   importance: string;
+  link?: {
+    href: string;
+    label: string;
+  };
 };
 
 export const systemsDomains: SystemsDomain[] = [
   {
-    slug: "ai-operational-systems",
-    title: "AI Operational Systems",
+    slug: "streaming-concierge",
+    title: "Streaming Concierge",
+    meta: "Charter's first customer-facing agentic AI service",
     summary:
-      "Architectures that move beyond model delivery to full production operation, including orchestration, telemetry, safeguards, and lifecycle governance.",
+      "Conceived the solution, built the fully functional prototype, and designed the production architecture (LangGraph, LangChain, custom and standardized MCP, Playwright-MCP) for an agentic system that executes service-activation steps on the customer's behalf, reducing roughly 2 hours of customer effort to about 2 minutes.",
     importance:
-      "Most AI initiatives fail between prototype and operations. This domain matters because it closes that gap by designing for reliability, monitoring, and controlled change from the beginning.",
+      "Demonstrated to all leadership levels including the CEO; guided the cross-team build to production launch serving thousands of customers per day. The design was adopted as Charter's reference architecture governing ongoing agentic development.",
   },
   {
-    slug: "distributed-infrastructure-for-ai",
-    title: "Distributed Infrastructure for AI",
+    slug: "aiops-platform",
+    title: "AIOps at National Scale",
+    meta: "Detection, causal inference, prediction, and automated remediation · 30M+ subscribers",
     summary:
-      "Compute, data, and network architecture patterns that support sustained AI workloads across distributed environments.",
+      "Designed the detection, causal-inference, prediction, and automated-remediation platform (Random Cut Forest, MAD-GAN, Bayesian networks) for customer-facing network issues across a 30M+ subscriber footprint; delivered the full PoC and implementation design and led multi-department development at enterprise scale.",
     importance:
-      "AI performance in production is constrained by systems behavior, not just model quality. Infrastructure design determines throughput, fault tolerance, and the practical ceiling of capability.",
+      "Builds on pioneering Comcast's enterprise AIOps platform: ML alerting and event-correlation pipelines that cut false-positive alerts by 92%, petabyte-scale telemetry architecture, and automated anomaly response that materially reduced MTTR.",
   },
   {
-    slug: "network-scale-optimization",
-    title: "Network-Scale Optimization",
+    slug: "gpuaas",
+    title: "GPUaaS: AI Infrastructure as a Business",
+    meta: "Idea-to-inference platform on edge GPU infrastructure",
     summary:
-      "Optimization and control architectures for large, interconnected operational networks where latency, capacity, and trade-offs must be continuously managed.",
+      "Lead inference and MLOps/LLMOps architecture for a GPU-leasing initiative: an idea-to-inference platform with continuous training and enhancement loops, built to serve external AI workloads at commercial scale.",
     importance:
-      "At network scale, local decisions generate global effects. Robust optimization architecture enables stable performance under changing demand and incomplete information.",
+      "Personally direct large-scale training on EKS and SageMaker: 100+ LLM fine-tuning runs across Qwen and other open-weight families, full LLM pretraining, and world-model training.",
   },
   {
-    slug: "agentic-platforms",
-    title: "Agentic Platforms",
+    slug: "noetix",
+    title: "Noetix",
+    meta: "Open source · sole author · MIT license",
     summary:
-      "Platform-level architecture for multi-step, tool-using agents with policy boundaries, execution controls, and operational observability.",
+      "An open-source agentic memory system providing embedding-based semantic search and GraphRAG, wrapped in MCP as first-class agent memory.",
     importance:
-      "Agentic capability without platform discipline becomes brittle. This domain is architecturally important because it converts autonomous capability into governed, auditable system behavior.",
+      "Independently developed and in internal use at Charter. Agent memory is where most agentic architectures quietly fail; Noetix treats it as a first-class system rather than an afterthought.",
+    link: {
+      href: "https://github.com/paulhenkelman/noetix",
+      label: "View on GitHub",
+    },
   },
   {
-    slug: "recommendation-and-forecasting",
-    title: "Recommendation and Forecasting Systems",
+    slug: "agentic-security",
+    title: "Agentic Security Architecture",
+    meta: "Patent disclosure filed",
     summary:
-      "Systems that combine statistical learning, feedback loops, and decision interfaces to improve planning and prioritization in dynamic environments.",
+      "Agent-safe sensitive-data handling: security architecture for agentic systems that must work with credentials and PII under guardrail and human-in-the-loop patterns built for dynamic workflows.",
     importance:
-      "Forecasts and recommendations influence real operating decisions. Their architecture must handle drift, uncertainty, and human override without losing decision quality.",
+      "A patent disclosure has been filed; technical detail will follow when the application publishes. The underlying problem is general: agentic systems inherit every data-exposure risk of the tools they orchestrate, and the architecture has to solve that, not the prompt.",
+  },
+  {
+    slug: "network-world-models",
+    title: "Network Language World Models",
+    meta: "Applied research · presented to GVP/SVP audiences",
+    summary:
+      "Research applying language world models (LWMs) to network management and automation, where agents require human-like operational intuition about how infrastructure actually behaves.",
+    importance:
+      "Presented at industry conference sessions, including the 2026 SCTE Rocky Mountain Symposium. World modeling is the likely next substrate for operational AI.",
   },
 ];

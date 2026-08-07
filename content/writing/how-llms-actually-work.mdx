@@ -1,0 +1,76 @@
+---
+title: "How LLMs Actually Work, for People Who Decide Things"
+description: "The complete path from a sentence to an answer, with nothing mystical left standing. Based on the executive session of an engineering training series on LLMs: if you can multiply and add, you can follow every computation a real transformer performs."
+publishedAt: "2026-08-07"
+status: "Essay"
+---
+
+C-suites get paid to decide where they need better information. For the most part their instincts serve them well. AI is the exception, because the vocabulary used to describe LLMs seems almost designed to stifle exploration: neural, attention, emergent, hallucination. Language like that makes the machine sound like a colleague. It is not a colleague. It is a pipeline of mathematical computations, and every stage of it can be opened up to see what is actually happening inside.
+
+Vendors make all sorts of promises about AI. To test, debug, cost, or capacity-plan such a system, you first have to be able to explain it. That is what this essay is for: an end-to-end walkthrough of how an LLM works that doubles as a primer for testing vendor claims. It is adapted from the executive session of an AI curriculum I wrote and teach; the math is simplified but never skipped.
+
+Two sentences summarize everything. First, AI is a mathematical pipeline: language goes in, becomes numbers, passes through layers of learned transformations, and a probability comes out. Second, meaning becomes geometry: words become points in space, similar meanings land close together, and "how similar are these two ideas?" becomes a question about the angle between two points, computable with multiply-and-add.
+
+Everything below is detail on those two sentences.
+
+## The model never sees words
+
+An LLM never actually reads your text. The first thing that happens to a prompt is tokenization: the text gets carved into subword pieces drawn from a fixed vocabulary of around 100,000 entries. Common words like "the" and "and" come through whole. Rarer words get split into reusable parts, so "tokenization" shows up as token + ization. There is good trivia buried here, too: the algorithm doing the carving descends from a data-compression trick published in 1994, which means the first thing a billion-dollar model does with your question is run it through a thirty-year-old compression scheme.
+
+A word about tokens, because these small groups of characters set the price of running AI. API rates, context windows, and generation speed are all quoted in tokens. In English, four characters is roughly one token, and 750 words lands near a thousand. The same content in another language can run two to three times the tokens, worth knowing before a multilingual customer-facing deployment. You pay for AI by the token, so a budget conversation is a token conversation.
+
+Next, each token is traded for its row number in the vocabulary, and that list of integers is what the model actually takes in. The point that matters: the integers are arbitrary labels. Nothing makes token 4438 "closer" to 1587 than to 11. "Dog" might sit at entry 7 while "puppy" sits at 98,431. Doing arithmetic on the labels produces nonsense; "dog" plus one is not a slightly better dog, it is whatever unrelated word occupies the next shelf.
+
+That single fact explains a familiar class of AI embarrassments. A model asked to count the r's in "strawberry" sometimes gets it wrong, and the reason is not stupidity. The model never saw letters; the word reached it as one or two opaque chunks. A surprising number of the strange failures making the rounds are tokenization stories.
+
+## Where meaning enters
+
+The next stage is the one that earns the pipeline its keep. Every token ID indexes into an enormous learned table, and what comes back is a vector: thousands of numbers that encode the token's meaning as a position in space.
+
+The property worth pausing on: similar meanings produce similar vectors. In this space, "dog" and "puppy" point in nearly the same direction, while "dog" and "spreadsheet" point somewhere else entirely. No one programmed that in. It fell out of training the model to predict text. And once meaning has coordinates, the similarity of two meanings is just the angle between two vectors, which multiplication and addition can compute. The live session does one by hand, on a napkin; it takes two minutes, and the mystique never recovers.
+
+A great deal of the industry stands on that one idea. Semantic search is a nearest-neighbor hunt through meaning-space. Retrieval-augmented generation, RAG, locates the document chunks whose vectors sit nearest your question and passes them to the model as context. A recommendation engine measures a user's vector against item vectors. Agent memory pulls up past situations whose vectors look like the present one. One geometric trick, five product names.
+
+## Attention is asking around
+
+From here the vectors move through the transformer, the architecture underneath every model you have heard of. A transformer is not a single clever mechanism. It is one simple block repeated dozens of times, and the block does two things.
+
+The first is attention. Each token composes a question, roughly "what am I looking for?", while every token also posts a label: "here is what I contain." Every question is scored against every label at once, and those scores determine whose information gets mixed in. The classic test sentence: "The trophy didn't fit in the suitcase because it was too big." Everyone reads "it" as the trophy. Swap one word, "too small," and "it" becomes the suitcase. The sentence's shape never changed; context alone decided. Attention is the machinery that lets each word weigh that context, and the rule was never written by anyone. It emerged from patterns across billions of sentences.
+
+The block's second half is a bank of detectors: small learned circuits that add up the evidence in a token's vector, subtract a threshold, and either fire or keep quiet. A production model carries thousands of them per layer. Run the block thirty-plus times in sequence and the representation sharpens the way an essay sharpens across drafts, until "bank" beside "river" has moved far away from "bank" beside "loan."
+
+Underneath, everything reduces to matrix multiplication, which is multiply-and-add at industrial volume. That is the whole reason the GPU won AI. Picture a CPU as sixteen brilliant chefs, excellent at complicated one-off dishes, and a GPU as twenty thousand line cooks all chopping at once. AI work is nearly all chopping.
+
+## Prediction, not lookup
+
+Here is the fact to carry into every vendor meeting: an LLM is a fluency-maximizing plausibility engine. What it produces is not an answer fetched from anywhere. It is a score for every token in the vocabulary, roughly 100,000 candidates for what comes next. Give it "The capital of France is" and Paris scores around 96 percent, London around 2, and everything else splits the crumbs.
+
+No database of answers exists inside the model. It scores continuations and selects a likely one. Paris wins because, across everything the model read, that sentence continues that way almost every time. What the model knows is stored as tendencies in its weights, not as rows in a facts table.
+
+For anyone signing off on a deployment, the consequence is the whole ballgame: a continuation can be perfectly fluent, score at the top, and be flat wrong, and it will sound precisely as confident as a correct answer. The machine optimizes plausibility, not truth. Hallucination is not a defect some vendor will patch away next quarter; it is what a plausibility engine natively does. Grounding techniques like RAG exist for exactly this reason. They swap the question "what does the model remember?" for "what do these retrieved documents say?", and the second question is one you can audit.
+
+One last mechanical detail rounds out the picture. The model emits a single token, appends it, and runs the whole pipeline again. A paragraph of output means hundreds of complete passes through the machine, and the run ends when the model predicts a stop token. Which sets up my favorite demonstration.
+
+## The pocket transformer
+
+A claim like "it's all arithmetic" deserves to be challenged, so the curriculum's deepest session answers the challenge directly: it traces a complete, working transformer that has 126 parameters. Not a diagram of one. A real one, small enough that every number fits on a slide, with a ten-word vocabulary, one layer, and one attention head. Its equations, steps, and data flow match an 8-billion-parameter production model exactly; only the dimensions are shrunk.
+
+The session feeds it four words, "the modem needs a," and the room watches the completion happen. The article "a" forms its question and puts 80 percent of its attention budget on "modem" and "needs," precisely the two words that matter, and it lands there through arithmetic alone. A detector fires at 0.59 and writes its opinion back into the token, which stops being an article and turns into a request for a fix. The vocabulary gets scored, "reboot" takes 45 percent, and the machine has completed "the modem needs a reboot" without one hidden step.
+
+Then comes the moment people bring up later. Append "reboot" and run everything again. Now a different detector fires, one whose learned evidence amounts to: device present, action present, no article pending, the request is complete. It writes onto the end-of-sentence axis, and the period wins at 77 percent. By arithmetic, the model has decided it is finished talking. The first detector, meanwhile, came in at 0.88 against a threshold of 0.90, two pennies short, and stayed silent. A threshold is a decision, and the room just watched one flip.
+
+Only scale separates that toy from production. Four dimensions grow to 4,096, one attention head to 32, one layer to 32, two detectors to 14,336 per layer. Around 300 hand-traceable operations become roughly 16 billion multiply-adds per generated token. A human doing one operation per second would need about 500 years per token. A GPU finishes in milliseconds, and you now know precisely what it spent them on.
+
+## What this buys you
+
+Not trivia. Leverage.
+
+Cost stops being magic. Tokens and GPU-hours are engineering units, the way kilowatt-hours are. Context windows, latency, and per-seat pricing all come back to how many times the pipeline runs and how wide it runs. A team that understands the pipeline can work out, from first principles, what to build, what to buy, and what either should cost.
+
+Vendor claims become testable. "Our model understands your business" unpacks to: the weights encode continuation tendencies, and the context window carries whatever gets fed in per request. The follow-ups then ask themselves: what gets retrieved, what gets logged, where does our data enter, and does it leave?
+
+Risk acquires a mechanism. Knowing the machine scores plausibility, you stop asking whether it hallucinates, since it does, and start asking engineering questions instead: grounded on which sources, evaluated how, monitored by whom, with human checkpoints wherever consequences are real. Governance gets sharply better the moment it concerns mechanisms instead of magic.
+
+And the coming years of AI headlines will be assembled from parts you can now name. An agent is this same loop permitted to call tools rather than stop. A world model applies the identical recipe of tokens, embeddings, attention, and next-thing prediction to environments rather than text.
+
+A transformer is arithmetic you could do by hand, repeated until it looks like thought. A leader who has internalized that stops being an audience for AI claims and becomes a qualified judge of them, able to reason about capability and risk from first principles. That reasoning, and not any particular model, is the durable advantage.

@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/content/site";
 import { getWritingEntries } from "@/lib/writing";
 
-const staticRoutes = ["", "about", "systems", "writing", "contact"];
+const staticRoutes = ["", "about", "systems", "speaking", "writing", "contact"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();

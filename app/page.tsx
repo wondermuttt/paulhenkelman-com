@@ -7,11 +7,12 @@ import { Section } from "@/components/ui/section";
 import { SystemsDomainCard } from "@/components/ui/systems-domain-card";
 import { WritingCard } from "@/components/ui/writing-card";
 import { homeContent } from "@/content/home";
+import { speakingEngagements } from "@/content/speaking";
 import { systemsDomains } from "@/content/systems";
-import { getWritingEntries } from "@/lib/writing";
+import { getWritingListItems } from "@/lib/writing";
 
 export default async function HomePage() {
-  const writingEntries = await getWritingEntries();
+  const writingEntries = await getWritingListItems();
 
   return (
     <>
@@ -76,8 +77,8 @@ export default async function HomePage() {
       <Section
         id="pillars"
         eyebrow="Core Focus"
-        title="Architectural Priorities"
-        intro="Domain depth, operational discipline, and systems-level design principles for AI capability that must perform under production conditions."
+        title="What I Work On"
+        intro="Four fronts of the same job: making AI capability dependable at enterprise scale."
       >
         <CardGrid columns={2}>
           {homeContent.pillars.map((pillar) => (
@@ -95,27 +96,68 @@ export default async function HomePage() {
       <Section
         id="domains"
         eyebrow="Systems"
-        title="Architectural Domains"
-        intro="Representative territory across AI architecture, distributed infrastructure, and operational intelligence systems."
+        title="Systems Built and Running"
+        intro="From agentic services in customers' hands to the platforms watching a national network."
         className="border-t border-black/10 bg-[#faf9f6]"
       >
         <CardGrid>
-          {systemsDomains.map((domain) => (
+          {systemsDomains.slice(0, 3).map((domain) => (
             <SystemsDomainCard key={domain.slug} domain={domain} />
           ))}
         </CardGrid>
+        <div className="mt-8">
+          <Link
+            href="/systems"
+            className="inline-flex items-center rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:border-neutral-500 hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-neutral-700"
+          >
+            All Systems
+          </Link>
+        </div>
+      </Section>
+
+      <Section
+        id="speaking"
+        eyebrow="Speaking"
+        title="Invited Talks"
+        intro={homeContent.speakingIntro}
+        className="border-t border-black/10"
+      >
+        <div className="grid gap-5 md:grid-cols-3">
+          {speakingEngagements.map((talk) => (
+            <article
+              key={talk.slug}
+              className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm shadow-black/5"
+            >
+              <p className="text-xs font-medium tracking-[0.12em] text-neutral-500 uppercase">
+                {talk.date}
+              </p>
+              <h3 className="mt-3 text-lg leading-snug font-semibold text-neutral-950">
+                {talk.event}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-neutral-700">{talk.topic}</p>
+            </article>
+          ))}
+        </div>
+        <div className="mt-8">
+          <Link
+            href="/speaking"
+            className="inline-flex items-center rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-800 transition-colors hover:border-neutral-500 hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-neutral-700"
+          >
+            All Talks
+          </Link>
+        </div>
       </Section>
 
       <Section
         id="writing"
         eyebrow="Writing"
-        title="Notes in Progress"
+        title="Essays"
         intro={homeContent.writingIntro}
-        className="border-t border-black/10"
+        className="border-t border-black/10 bg-[#faf9f6]"
       >
         <CardGrid>
           {writingEntries.slice(0, 3).map((entry) => (
-            <WritingCard key={entry.slug} entry={entry} />
+            <WritingCard key={entry.href} entry={entry} />
           ))}
         </CardGrid>
       </Section>
@@ -123,9 +165,9 @@ export default async function HomePage() {
       <Section
         id="about-preview"
         eyebrow="About"
-        title="A Systems-Oriented Perspective"
+        title="The Background"
         intro={homeContent.aboutPreview}
-        className="border-t border-black/10 bg-[#faf9f6]"
+        className="border-t border-black/10"
       >
         <Link
           href="/about"

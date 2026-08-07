@@ -8,7 +8,7 @@ import { buildMetadata } from "@/lib/metadata";
 export const metadata: Metadata = buildMetadata({
   title: "About",
   description:
-    "How Paul Henkelman approaches AI architecture, distributed systems, operational reliability, and model epistemology.",
+    "Paul Henkelman's path from U.S. Navy technical operations through thirty years of systems, networking, and software to leading enterprise AI strategy and architecture at Fortune 100 scale.",
   path: "/about",
 });
 
@@ -17,8 +17,8 @@ export default function AboutPage() {
     <>
       <PageIntro
         eyebrow="About"
-        title="Architecture as a Long-Horizon Discipline"
-        description="A systems perspective on AI capability, operational reliability, and the structural decisions that determine whether intelligent platforms endure."
+        title="Thirty Years of Systems, a Decade of AI at Scale"
+        description="From Navy technical operations to enterprise AI architecture: the background behind the systems."
       />
 
       <Section title="Overview">
@@ -28,7 +28,7 @@ export default function AboutPage() {
       </Section>
 
       <Section
-        title="Architecture Perspective"
+        title="Perspective"
         className="border-t border-black/10 bg-[#faf9f6]"
       >
         <p className="max-w-3xl text-base leading-relaxed text-neutral-700 sm:text-lg">
@@ -36,20 +36,44 @@ export default function AboutPage() {
         </p>
       </Section>
 
-      <Section title="Areas of Interest" className="border-t border-black/10">
-        <ul className="max-w-3xl space-y-3">
-          {aboutContent.interests.map((interest) => (
-            <li
-              key={interest}
-              className="rounded-xl border border-black/10 bg-white px-4 py-3 text-sm leading-relaxed text-neutral-700 sm:text-base"
+      <Section title="Career" className="border-t border-black/10">
+        <div className="max-w-4xl space-y-6">
+          {aboutContent.career.map((role) => (
+            <article
+              key={role.period}
+              className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm shadow-black/5"
             >
-              {interest}
-            </li>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <h3 className="text-lg leading-snug font-semibold text-neutral-950 sm:text-xl">
+                  {role.title}
+                </h3>
+                <p className="text-sm font-medium text-neutral-500">{role.period}</p>
+              </div>
+              <p className="mt-1 text-sm font-medium text-neutral-600">{role.org}</p>
+              <p className="mt-3 text-sm leading-relaxed text-neutral-700">{role.detail}</p>
+            </article>
           ))}
-        </ul>
+        </div>
       </Section>
 
-      <Section title="Approach" className="border-t border-black/10 bg-[#faf9f6]">
+      <Section title="Education" className="border-t border-black/10 bg-[#faf9f6]">
+        <div className="max-w-4xl space-y-4">
+          {aboutContent.education.map((item) => (
+            <article
+              key={item.degree}
+              className="rounded-2xl border border-black/10 bg-white p-6"
+            >
+              <h3 className="text-lg leading-snug font-semibold text-neutral-950">{item.degree}</h3>
+              <p className="mt-1 text-sm font-medium text-neutral-600">{item.school}</p>
+              {item.detail ? (
+                <p className="mt-2 text-sm leading-relaxed text-neutral-700">{item.detail}</p>
+              ) : null}
+            </article>
+          ))}
+        </div>
+      </Section>
+
+      <Section title="Approach" className="border-t border-black/10">
         <div className="grid gap-5 md:grid-cols-3">
           {aboutContent.approach.map((item) => (
             <article key={item.title} className="rounded-2xl border border-black/10 bg-white p-6">

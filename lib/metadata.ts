@@ -34,7 +34,6 @@ export const baseMetadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.defaultTitle,
     description: siteConfig.description,
-    creator: siteConfig.xHandle,
     images: [defaultOgImage],
   },
   robots: {
@@ -85,7 +84,6 @@ export function buildMetadata({ title, description, path }: MetadataInput): Meta
     },
     twitter: {
       card: "summary_large_image",
-      creator: siteConfig.xHandle,
       title: fullTitle,
       description,
       images: [defaultOgImage],
