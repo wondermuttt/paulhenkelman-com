@@ -29,7 +29,7 @@ WebSocket disconnects. A sequence of separate `node script.js` invocations will 
 form in call 1 and find it gone in call 2. Everything for one form — navigate, click,
 fill, save — must happen inside a single connection that stays open.
 
-`scratchpad/session.js` implements a runner: it connects once and hands a flow module
+`scripts/linkedin/session.js` implements a runner: it connects once and hands a flow module
 `{evalJS, nav, rectOf, clickAt, clickEl, typeText, insertText, pressKey, sleep}`.
 
 ### 3. Real keystrokes, not `.value =`
@@ -69,8 +69,8 @@ then click the anchor. Edit anchors respond to a plain DOM `.click()`; the
 | Edit a position | `/details/experience/` → DOM-click `a[href*="<positionId>"]` | Most reliable form in the product. |
 | Add a position | `/details/experience/` → trusted-click "Add a position or career break" → click **"Add role"** in the menu | Two-step. Fields identify by placeholder (`Ex: Retail Sales Manager`, `Ex: Microsoft`), not label. |
 | Education | `/details/education/` → click entry anchor, or "Add education" | Degree placeholder `Ex: Bachelor of Science`, field `Ex: Business`. |
-| Skills | `/details/skills/` → "Add a skill" | **Unreliable under automation.** Form often refuses to mount. Do by hand. |
-| Contact info | `/overlay/contact-info/` → "Edit contact info" | **Unreliable.** The edit form does not hydrate. Do by hand. |
+| Skills | `/details/skills/` → "Add a skill" | Modal will not open under CDP. Use OS-level control (see below). |
+| Contact info | `/overlay/contact-info/` → "Edit contact info" | Form will not hydrate under CDP. Use OS-level control (see below). |
 
 ### Gotchas
 
@@ -104,3 +104,96 @@ profile-edit endpoints were retired years ago. The internal "Voyager" endpoints 
 web app uses are off-limits — hitting them violates the User Agreement's automation
 ban and risks account restriction, which is an unacceptable trade on the account
 being used for a job search. UI automation is the only route.
+
+---
+
+# OS-level control (the escalation that works)
+
+When CDP hits a wall — a form that will not hydrate, a button that ignores every
+synthetic click — escalate to real macOS input events. Evaluated Aug 2026 and it
+cleared several forms CDP could never open.
+
+## Setup
+
+**Server:** [`macos-automator-mcp`](https://github.com/steipete/macos-automator-mcp)
+(AppleScript/JXA execution), registered in `~/.claude.json` at user scope:
+
+```json
+"macos_automator": {
+  "command": "npx",
+  "args": ["-y", "--package", "@steipete/macos-automator-mcp", "macos-automator-mcp"]
+}
+```
+
+MCP servers load at client startup, so it is unavailable in the session that installs
+it. The server is a thin wrapper around `osascript`, so the same capability is
+reachable immediately from a shell.
+
+**Permissions** (System Settings → Privacy & Security):
+- **Accessibility** → `/Applications/Claude.app`. Required for any input event.
+  Without it: `-25211 osascript is not allowed assistive access`. Note that *reading*
+  window geometry works before this is granted, so a passing read test proves nothing.
+- **Screen Recording** → same app, only if you want native `screencapture`. Without
+  it: `could not create image from display`. Not granted as of this writing, which is
+  why screenshots still go through CDP.
+
+## The technique
+
+CDP finds elements; macOS drives them. `scripts/linkedin/osctl.js` implements it.
+
+**Coordinate bridge** — measured from the page, so it survives window moves:
+
+```
+screenX = window.screenX + elementViewportX
+screenY = window.screenY + (window.outerHeight - window.innerHeight) + elementViewportY
+```
+
+Both sides are CSS points, so Retina needs no DPR correction. Verified by moving the
+cursor and asking the page what is under it:
+
+```js
+document.querySelectorAll(':hover')  // -> "A | Add a skill"
+```
+
+Run that check once before trusting any click.
+
+**Use CGEvents, not `System Events click at`.** The AppleScript form is deprecated and
+throws -25211 even with Accessibility granted. JXA posting CGEvents works
+(`scripts/linkedin/click.jxa`):
+
+```javascript
+ObjC.import('CoreGraphics');
+$.CGEventPost(0, $.CGEventCreateMouseEvent($(), 5, {x:x, y:y}, 0)); // move
+$.CGEventPost(0, $.CGEventCreateMouseEvent($(), 1, {x:x, y:y}, 0)); // down
+$.CGEventPost(0, $.CGEventCreateMouseEvent($(), 2, {x:x, y:y}, 0)); // up
+```
+
+Event types: 1 down, 2 up, 5 moved. Tap 0 = `kCGHIDEventTap`.
+
+**Typing** is `System Events keystroke`, chunked to ~180 chars. `Cmd+A` then key code
+51 (delete) clears a field before retyping.
+
+## What it unlocked
+
+| Task | CDP | OS-level |
+|---|---|---|
+| Open the Add-skill modal | never opened | opened first try |
+| Add 38 skills w/ typeahead | n/a | all succeeded |
+| Open contact-info edit form | never hydrated | opened |
+| Swap profile top-skills | n/a | succeeded |
+
+## Traps
+
+- **Duplicate elements.** LinkedIn renders hidden copies of profile buttons in the
+  nav. `.find()` returns the nav one at `top: 3` and the click lands in the header.
+  Filter candidates: `r.width > 0 && r.top > 80`.
+- **CDP attach/detach disturbs the SPA.** Connecting for a screenshot can close an
+  open modal. For modal-heavy flows, either keep one session open the whole time or
+  go fully native (which needs the Screen Recording grant).
+- **Verify the typeahead pick.** Typing a term and taking the first suggestion gave
+  "Ray" → **V-Ray** (3D rendering software). Always read back the chosen value; when
+  the taxonomy has no right answer, omit the entry rather than keep a wrong one.
+- **Do not blind-save consequential forms.** Open-to-Work's visibility control
+  ("Recruiters only" vs "All LinkedIn members") sits below the fold. Saving without
+  reading it risks publishing a public job-seeking banner to the user's employer.
+  Fill what is safe, then hand the commit to the user.

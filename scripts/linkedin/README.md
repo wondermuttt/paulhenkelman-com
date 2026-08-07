@@ -35,3 +35,23 @@ node cdp.js <targetId> extract.js --nav "https://www.linkedin.com/in/<vanity>/"
 where `extract.js` scrolls the `#workspace` container in rounds until the height
 stops growing, then returns `innerText`. Sections lazy-load; a single scroll pass
 misses them.
+
+## OS-level control (when CDP will not open a form)
+
+`osctl.js` pairs CDP element-finding with real macOS mouse/keyboard events. Needs
+Accessibility granted to `/Applications/Claude.app`. See `../../LINKEDIN.md`.
+
+```bash
+node osctl.js <targetId> <flow.js>
+```
+
+Flow context adds `clickReal`, `screenRect`, `osClick`, `osMove`, `osType`, `osKey`,
+`front` on top of the CDP helpers.
+
+| Flow | Does |
+|---|---|
+| `flow-skill-os.js` | Adds skills w/ typeahead. Env: `SKILLS` (comma separated). |
+| `flow-delete-skill.js` | Removes a skill. Env: `SKILL_NAME`. |
+| `flow-contact-fix.js` | Clears a website row and edits contact fields. |
+
+`click.jxa` is the CGEvent clicker: `osascript -l JavaScript click.jxa <x> <y> [click|move]`.

@@ -1,0 +1,15 @@
+ObjC.import('CoreGraphics');
+ObjC.import('Foundation');
+function nap(s){ $.NSThread.sleepForTimeInterval(s); }
+function run(argv) {
+  var x = parseFloat(argv[0]), y = parseFloat(argv[1]);
+  var mode = argv[2] || "click";
+  var pt = {x:x, y:y};
+  $.CGEventPost(0, $.CGEventCreateMouseEvent($(), 5, pt, 0));   // move
+  nap(0.10);
+  if (mode === "move") return "moved " + x + "," + y;
+  $.CGEventPost(0, $.CGEventCreateMouseEvent($(), 1, pt, 0));   // left down
+  nap(0.06);
+  $.CGEventPost(0, $.CGEventCreateMouseEvent($(), 2, pt, 0));   // left up
+  return "clicked " + x + "," + y;
+}
