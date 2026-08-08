@@ -207,3 +207,31 @@ Event types: 1 down, 2 up, 5 moved. Tap 0 = `kCGHIDEventTap`.
   from the screenshot: `screen_point = displayed_px x (display_width / image_width)`.
   Re-screenshot after every step; LinkedIn re-scrolls the modal on its own, and
   typeahead inputs lose focus after each selection (re-click before typing again).
+
+## Featured section
+
+Path: profile → **Add section** → Recommended → **Add featured** → **+** → **Add a link**.
+Creates `/details/featured/`. Per link: paste URL → **Add** → LinkedIn fetches title
+and thumbnail → fill Description → scroll → **Save**.
+
+Three traps, all discovered the hard way:
+
+- **Never type a URL with `keystroke`.** System Events silently drops characters on
+  long strings; `how-llms-actually-work` was typed as `how-llms-actuallywork`, and a
+  description lost the `t` in "to". Use the clipboard, which is atomic:
+  ```bash
+  printf '%s' "$URL" | pbcopy
+  # click field, then Cmd+A, Cmd+V
+  ```
+  Use it for descriptions too, and read the saved value back before moving on.
+- **A failed validation wedges the dialog.** After "Please enter a valid link," every
+  subsequent attempt fails in that dialog even with a correct URL, and a "Saving"
+  toast sticks in the corner. Reload the page before each add; the same URL that
+  just failed then succeeds immediately.
+- **The link-preview fetcher is rate limited.** After a handful of adds, every URL is
+  rejected regardless of validity, including ones that pass a `curl` check as
+  `LinkedInBot`. This is throttling, not a bad link. Stop and come back later;
+  retrying extends the limit. Verify a URL independently before blaming it:
+  ```bash
+  curl -s -o /dev/null -w '%{http_code}' -A "LinkedInBot/1.0" "$URL"
+  ```
