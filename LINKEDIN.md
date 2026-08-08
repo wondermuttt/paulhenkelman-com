@@ -133,9 +133,12 @@ reachable immediately from a shell.
 - **Accessibility** → `/Applications/Claude.app`. Required for any input event.
   Without it: `-25211 osascript is not allowed assistive access`. Note that *reading*
   window geometry works before this is granted, so a passing read test proves nothing.
-- **Screen Recording** → same app, only if you want native `screencapture`. Without
-  it: `could not create image from display`. Not granted as of this writing, which is
-  why screenshots still go through CDP.
+- **Screen Recording** → same app. Required for useful screenshots. The failure mode
+  is genuinely deceptive: `CGDisplayCreateImage` **succeeds** without it, returning a
+  valid full-size image and no error, but macOS silently strips every application
+  window, leaving only desktop wallpaper. No exception, no prompt, no denial. The
+  `screencapture` CLI is more honest, failing with `could not create image from
+  display`. Verify a capture actually contains window content before trusting it.
 
 ## The technique
 
@@ -194,6 +197,13 @@ Event types: 1 down, 2 up, 5 moved. Tap 0 = `kCGHIDEventTap`.
   "Ray" → **V-Ray** (3D rendering software). Always read back the chosen value; when
   the taxonomy has no right answer, omit the entry rather than keep a wrong one.
 - **Do not blind-save consequential forms.** Open-to-Work's visibility control
-  ("Recruiters only" vs "All LinkedIn members") sits below the fold. Saving without
-  reading it risks publishing a public job-seeking banner to the user's employer.
-  Fill what is safe, then hand the commit to the user.
+  ("Recruiters only" vs "All LinkedIn members") sits below the fold, and the second
+  option is the one that adds the public #OpenToWork photo frame and exposes the
+  search to people at the current employer. Scroll to it, screenshot it, confirm the
+  right radio is filled, and only then save. With native screenshots this is
+  verifiable; without them, hand the commit to the user.
+- **Go fully native for modal-heavy flows.** Once Screen Recording is granted, drive
+  the whole flow with CGEvents + `shot.jxa` and never attach CDP. Coordinates come
+  from the screenshot: `screen_point = displayed_px x (display_width / image_width)`.
+  Re-screenshot after every step; LinkedIn re-scrolls the modal on its own, and
+  typeahead inputs lose focus after each selection (re-click before typing again).

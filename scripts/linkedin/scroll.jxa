@@ -1,0 +1,16 @@
+ObjC.import('CoreGraphics');
+ObjC.import('Foundation');
+function nap(s){ $.NSThread.sleepForTimeInterval(s); }
+function run(argv) {
+  var x = parseFloat(argv[0]), y = parseFloat(argv[1]);
+  var amt = parseInt(argv[2] || "-3", 10);   // negative = scroll down
+  var times = parseInt(argv[3] || "5", 10);
+  $.CGEventPost(0, $.CGEventCreateMouseEvent($(), 5, {x:x, y:y}, 0)); // move first
+  nap(0.15);
+  for (var i = 0; i < times; i++) {
+    var ev = $.CGEventCreateScrollWheelEvent($(), 0, 1, amt); // unit 0 = pixel? 1 axis
+    $.CGEventPost(0, ev);
+    nap(0.12);
+  }
+  return "scrolled " + times + " x " + amt + " at " + x + "," + y;
+}

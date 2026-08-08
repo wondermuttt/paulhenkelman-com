@@ -1,0 +1,13 @@
+ObjC.import('CoreGraphics');
+ObjC.import('ImageIO');
+ObjC.import('Foundation');
+function run(argv) {
+  var out = argv[0];
+  var img = $.CGDisplayCreateImage($.CGMainDisplayID());
+  var url = $.NSURL.fileURLWithPath(out);
+  var dest = $.CGImageDestinationCreateWithURL(url, $("public.png"), 1, $());
+  if (!dest) return "ERROR: no destination";
+  $.CGImageDestinationAddImage(dest, img, $());
+  var ok = $.CGImageDestinationFinalize(dest);
+  return ok ? ("saved " + out) : "ERROR: finalize failed";
+}

@@ -55,3 +55,20 @@ Flow context adds `clickReal`, `screenRect`, `osClick`, `osMove`, `osType`, `osK
 | `flow-contact-fix.js` | Clears a website row and edits contact fields. |
 
 `click.jxa` is the CGEvent clicker: `osascript -l JavaScript click.jxa <x> <y> [click|move]`.
+
+## Fully native (no CDP)
+
+For modals CDP disturbs, drive everything with OS events and native screenshots:
+
+```bash
+osascript -l JavaScript click.jxa  <x> <y> [click|move]
+osascript -l JavaScript scroll.jxa <x> <y> <amount> <times>   # negative = down
+osascript -l JavaScript shot.jxa   <out.png>                  # needs Screen Recording
+sips -Z 1400 out.png --out small.png                          # shrink for reading
+```
+
+Coordinate mapping from a resized screenshot:
+`screen_point = displayed_px * (display_width_points / image_width_px)`
+
+Re-screenshot after each step. LinkedIn re-scrolls modals on its own, and typeahead
+inputs drop focus after every selection, so re-click before typing again.
