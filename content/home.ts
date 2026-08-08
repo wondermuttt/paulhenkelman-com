@@ -21,7 +21,7 @@ export const homeContent = {
     {
       title: "Agentic Systems",
       description:
-        "Architected Charter's first customer-facing agentic AI service, demonstrated to the CEO and adopted as the company-wide reference architecture; deep protocol-level MCP work, guardrail and human-in-the-loop patterns, and agent evaluation.",
+        "Architected Charter's first customer-facing agentic AI service, presented to leadership up to the CEO and adopted as the company-wide reference architecture; deep protocol-level MCP work, guardrail and human-in-the-loop patterns, and agent evaluation.",
     },
     {
       title: "AI Platforms & MLOps",

@@ -18,7 +18,7 @@ export const systemsDomains: SystemsDomain[] = [
     summary:
       "Conceived the solution, built the fully functional prototype, and designed the production architecture (LangGraph, LangChain, custom and standardized MCP, Playwright-MCP) for an agentic system that executes service-activation steps on the customer's behalf, reducing roughly 2 hours of customer effort to about 2 minutes.",
     importance:
-      "Demonstrated to all leadership levels including the CEO; guided the cross-team build to production launch serving thousands of customers per day. The design was adopted as Charter's reference architecture governing ongoing agentic development.",
+      "The demo was presented at every level of leadership, including to the CEO; guided the cross-team build to production launch serving thousands of customers per day. The design was adopted as Charter's reference architecture governing ongoing agentic development.",
   },
   {
     slug: "aiops-platform",

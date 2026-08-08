@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Standalone Node/JXA automation scripts, not part of the Next.js app.
+    // They are CommonJS by design and are run directly with node/osascript.
+    "scripts/**",
   ]),
 ]);
 

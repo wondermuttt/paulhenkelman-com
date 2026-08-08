@@ -1,6 +1,6 @@
 export const aboutContent = {
   overview:
-    "Paul Henkelman is an enterprise AI executive with 10+ years leading AI strategy, architecture, and delivery at Fortune 100 scale, and 30 years across systems, networking, security, and software. He designed and delivered Charter's first customer-facing agentic AI service, demonstrated to the CEO and adopted as the company-wide reference architecture, and leads AI platforms serving a 30M+ subscriber footprint.",
+    "Paul Henkelman is an enterprise AI executive with 10+ years leading AI strategy, architecture, and delivery at Fortune 100 scale, and 30 years across systems, networking, security, and software. He designed and delivered Charter's first customer-facing agentic AI service, whose demo was presented at every level of leadership including to the CEO and whose design became the company-wide reference architecture, and he architects the AI platforms behind a 30M+ subscriber network.",
   architecturePerspective:
     "Thirty years of running real infrastructure left one durable conviction: AI starts to matter when it becomes dependable infrastructure. Models are the easy part. The hard part is everything around them: orchestration, observability, data discipline, security, design that expects failure. Demos skip all of that, which is why so few of them survive contact with production.",
   career: [
